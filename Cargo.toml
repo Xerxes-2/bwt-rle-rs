@@ -1,0 +1,14 @@
+[package]
+name = "bwt-rle-rs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+cap = "0.1.2"
+
+[profile.release]
+strip = true
+lto = true
+opt-level = "z"
+codegen-units = 1
+panic = "abort"
