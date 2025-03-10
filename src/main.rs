@@ -1,9 +1,9 @@
-use bwt_rle_rs::{CHECKPOINT_LEN, U32_SIZE, index::gen_index};
+use bwt_rle_rs::{CHECKPOINT_LEN, I32_SIZE, index::gen_index};
 use cap::Cap;
 use std::{
     alloc,
     fs::{File, OpenOptions},
-    io::{BufRead, BufReader, BufWriter, Read, Seek},
+    io::{BufReader, BufWriter, Read},
 };
 
 #[global_allocator]
@@ -24,17 +24,17 @@ fn main() {
     let rlb_size = rlb.metadata().unwrap().len();
     let mut rlb = BufReader::new(rlb);
     let checkpoints = rlb_size as usize / CHECKPOINT_LEN;
-    let positions: Vec<u32>;
+    let positions: Vec<i32>;
     let mut index: Option<BufReader<File>>;
     if checkpoints > 0 {
         if let Ok(index_file) = OpenOptions::new().read(true).open(index_name) {
-            let mut p = vec![0u8; (checkpoints + 1) * U32_SIZE];
-            let p_tail = &mut p[U32_SIZE..];
+            let mut p = vec![0u8; (checkpoints + 1) * I32_SIZE];
+            let p_tail = &mut p[I32_SIZE..];
             index = Some(BufReader::new(index_file));
             index.as_mut().unwrap().read_exact(p_tail).unwrap();
             positions = p
-                .chunks_exact(U32_SIZE)
-                .map(|x| u32::from_le_bytes(x.try_into().unwrap()))
+                .chunks_exact(I32_SIZE)
+                .map(|x| i32::from_le_bytes(x.try_into().unwrap()))
                 .collect();
         } else {
             // Create index file
@@ -52,6 +52,8 @@ fn main() {
         positions = vec![0];
         index = None;
     }
-    let reverse = args[3].chars().map(|x| x as u8).collect::<Vec<_>>();
+    let mut pat = args[3].to_owned().into_bytes();
+    pat.reverse();
     let mut ctx = bwt_rle_rs::Context::new(rlb, index, checkpoints, positions);
+    ctx.search(&pat);
 }
