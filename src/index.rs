@@ -1,10 +1,9 @@
 use std::{
-    collections::BinaryHeap,
     fs::File,
     io::{Read, Seek, SeekFrom, Write},
 };
 
-use crate::{ALPHABETS, CHEATS, CHECKPOINT_LEN, Context, I32_SIZE, PIECE_LEN, TryReadExact};
+use crate::{ALPHABETS, CHECKPOINT_LEN, Context, I32_SIZE, PIECE_LEN, TryReadExact};
 
 pub const fn map_char(c: u8) -> u8 {
     match c {
@@ -53,31 +52,6 @@ impl RunLength {
         map_char(self.char)
     }
 
-    fn encode(&self) -> [u8; 3 * I32_SIZE] {
-        // len and pos is at most 28 bits
-        let u64 = ((self.char as u64) << 56) | ((self.len as u64) << 28) | self.pos as u64;
-        let u64 = u64.to_le_bytes();
-        let mut encoded = [0u8; 3 * I32_SIZE];
-        encoded[..8].copy_from_slice(&u64);
-        encoded[8..].copy_from_slice(&self.rank.to_le_bytes());
-        encoded
-    }
-
-    fn decode(encoded: &[u8; 3 * I32_SIZE]) -> Self {
-        let u64 = u64::from_le_bytes(encoded[..8].try_into().unwrap());
-        let char = (u64 >> 56) as u8;
-        let len = ((u64 >> 28) & 0x0fff_ffff) as i32;
-        let pos = (u64 & 0x0fff_ffff) as i32;
-        let rank = i32::from_le_bytes(encoded[8..].try_into().unwrap());
-        Self {
-            char,
-            len,
-            size: 0,
-            pos,
-            rank,
-        }
-    }
-
     fn set_rank(&mut self, rank: i32) {
         self.rank = rank;
     }
@@ -94,26 +68,6 @@ impl RunLength {
 
     fn update_occ(&self, occ: &mut OccTable) {
         occ[map_char(self.char) as usize] += self.len;
-    }
-}
-
-impl PartialEq for RunLength {
-    fn eq(&self, other: &Self) -> bool {
-        self.len == other.len
-    }
-}
-
-impl Eq for RunLength {}
-
-impl PartialOrd for RunLength {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.len.cmp(&other.len))
-    }
-}
-
-impl Ord for RunLength {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.len.cmp(&other.len)
     }
 }
 
@@ -142,13 +96,11 @@ pub fn gen_index(rlb: &mut File, index: &mut File, checkpoints: usize) -> Vec<i3
             .skip_while(|&x| x.is_rl_tail());
 
         let mut rl = RunLength::new(iter.next().unwrap().to_owned(), cur_pos);
-        let mut pq = BinaryHeap::new();
         iter.for_each(|&b| {
             if b.is_rl_tail() {
                 rl.extend_byte(b);
             } else {
                 rl.set_rank(occ[rl.map_char() as usize]);
-                pq.push(rl);
                 rl.update_occ(&mut occ);
                 cur_pos += rl.len;
                 rl = RunLength::new(b, cur_pos);
@@ -158,11 +110,7 @@ pub fn gen_index(rlb: &mut File, index: &mut File, checkpoints: usize) -> Vec<i3
         cur_pos += rl.len;
 
         positions.push(cur_pos);
-        // keep top CHEATS run-lengths
-        let cheat_sheet = CheatSheet::new(pq);
-        let cheat_sheet = cheat_sheet.encode();
 
-        index.write_all(&cheat_sheet).unwrap();
         let occ = occ
             .into_iter()
             .flat_map(i32::to_le_bytes)
@@ -242,7 +190,7 @@ impl Context {
             let index = self.index.as_mut().unwrap();
             index
                 .seek(SeekFrom::Start(
-                    ((self.cps + CHEATS * 3) * I32_SIZE + (nearest_cp - 1) * PIECE_LEN) as u64,
+                    (self.cps * I32_SIZE + (nearest_cp - 1) * PIECE_LEN) as u64,
                 ))
                 .unwrap();
             let mut buf = [0u8; ALPHABETS * I32_SIZE];
@@ -256,13 +204,18 @@ impl Context {
         }
         self.rlb.seek(SeekFrom::Start(pos_rlb as u64)).unwrap();
         let mut buf = [0u8; CHECKPOINT_LEN + 4];
-        let n = self.rlb.try_read_exact(&mut buf).unwrap();
-        let mut iter = buf.into_iter().take(n).skip_while(|&x| x.is_rl_tail());
-        let Some(b) = iter.next() else {
+        let buf = if ((pos - pos_bwt + 9) as usize) < buf.len() {
+            &mut buf[..(pos - pos_bwt + 9) as usize]
+        } else {
+            &mut buf
+        };
+        let n = self.rlb.try_read_exact(buf).unwrap();
+        let mut iter = buf.iter_mut().take(n).skip_while(|x| x.is_rl_tail());
+        let Some(&mut b) = iter.next() else {
             unreachable!("Empty run-length")
         };
         let mut rl = RunLength::new(b, 0);
-        for b in iter {
+        for &mut b in iter {
             if b.is_rl_tail() {
                 rl.extend_byte(b);
             } else {
@@ -281,40 +234,19 @@ impl Context {
     }
 
     fn read_cp(&mut self, nearest_cp: usize) -> Checkpoint {
-        match self.index {
-            None => Checkpoint::Tail([0; ALPHABETS]),
-            Some(ref mut index) => {
-                if nearest_cp == 0 {
-                    let mut buf = [0u8; CHEATS * 3 * I32_SIZE];
-                    index.rewind().unwrap();
-                    index.read_exact(&mut buf).unwrap();
-                    let cheat_sheet = CheatSheet::decode(&buf);
-                    return Checkpoint::Body(cheat_sheet, [0; ALPHABETS]);
-                }
-                let read_pos = (self.cps + CHEATS * 3) * I32_SIZE + (nearest_cp - 1) * PIECE_LEN;
+        match (&mut self.index, nearest_cp) {
+            (None, _) => Checkpoint::default(),
+            (_, 0) => Checkpoint::default(),
+            (Some(index), _) => {
+                let read_pos = self.cps * I32_SIZE + (nearest_cp - 1) * PIECE_LEN;
                 index.seek(SeekFrom::Start(read_pos as u64)).unwrap();
-                if nearest_cp == self.cps {
-                    let mut buf = [0u8; ALPHABETS * I32_SIZE];
-                    index.read_exact(&mut buf).unwrap();
-                    let mut occ = [0i32; ALPHABETS];
-                    buf.chunks_exact(I32_SIZE)
-                        .enumerate()
-                        .for_each(|(i, b)| occ[i] = i32::from_le_bytes(b.try_into().unwrap()));
-                    Checkpoint::Tail(occ)
-                } else {
-                    let mut buf = [0u8; ALPHABETS * I32_SIZE + CHEATS * 3 * I32_SIZE];
-                    index.read_exact(&mut buf).unwrap();
-                    let cheat_sheet =
-                        CheatSheet::decode(&buf[ALPHABETS * I32_SIZE..].try_into().unwrap());
-                    let mut occ = [0i32; ALPHABETS];
-                    buf.chunks_exact(I32_SIZE)
-                        .take(ALPHABETS)
-                        .enumerate()
-                        .for_each(|(i, b)| {
-                            occ[i] = i32::from_le_bytes(b.try_into().unwrap());
-                        });
-                    Checkpoint::Body(cheat_sheet, occ)
-                }
+                let mut buf = [0u8; ALPHABETS * I32_SIZE];
+                index.read_exact(&mut buf).unwrap();
+                let mut occ = [0i32; ALPHABETS];
+                buf.chunks_exact(I32_SIZE)
+                    .enumerate()
+                    .for_each(|(i, b)| occ[i] = i32::from_le_bytes(b.try_into().unwrap()));
+                Checkpoint::new(occ)
             }
         }
     }
@@ -325,25 +257,22 @@ impl Context {
         let pos_rlb = nearest_cp * CHECKPOINT_LEN;
 
         let cp = self.read_cp(nearest_cp);
-        if let Checkpoint::Body(ref cs, _) = cp {
-            if let Some(mut rl) = cs.cheat(pos) {
-                rl.set_rank(rl.rank + pos - rl.pos);
-                return rl;
-            }
-        }
-        let mut occ = match cp {
-            Checkpoint::Body(_, occ) => occ,
-            Checkpoint::Tail(occ) => occ,
-        };
+        let mut occ = cp.occ;
         self.rlb.seek(SeekFrom::Start(pos_rlb as u64)).unwrap();
         let mut buf = [0u8; CHECKPOINT_LEN + 4];
-        let n = self.rlb.try_read_exact(&mut buf).unwrap();
-        let mut iter = buf.into_iter().take(n).skip_while(|x| x.is_rl_tail());
-        let Some(b) = iter.next() else {
+
+        let buf = if ((pos - pos_bwt + 9) as usize) < buf.len() {
+            &mut buf[..(pos - pos_bwt + 9) as usize]
+        } else {
+            &mut buf
+        };
+        let n = self.rlb.try_read_exact(buf).unwrap();
+        let mut iter = buf.iter_mut().take(n).skip_while(|x| x.is_rl_tail());
+        let Some(&mut b) = iter.next() else {
             unreachable!("Empty run-length")
         };
         let mut rl = RunLength::new(b, 0);
-        for b in iter {
+        for &mut b in iter {
             if b.is_rl_tail() {
                 rl.extend_byte(b);
             } else {
@@ -367,46 +296,22 @@ impl Context {
     }
 }
 
-struct CheatSheet([RunLength; CHEATS]);
+type OccTable = [i32; ALPHABETS];
 
-impl CheatSheet {
-    fn new(pq: BinaryHeap<RunLength>) -> Self {
-        let mut cheat_sheet = [RunLength::default(); CHEATS];
-        for (i, rl) in pq.into_iter().take(CHEATS).enumerate() {
-            cheat_sheet[i] = rl;
+struct Checkpoint {
+    pub occ: OccTable,
+}
+
+impl Default for Checkpoint {
+    fn default() -> Self {
+        Self {
+            occ: [0; ALPHABETS],
         }
-        Self(cheat_sheet)
-    }
-
-    fn decode(encoded: &[u8; CHEATS * 3 * I32_SIZE]) -> Self {
-        let iter = encoded.chunks_exact(3 * I32_SIZE);
-        let mut cheat_sheet = [RunLength::default(); CHEATS];
-        for (i, chunk) in iter.enumerate() {
-            cheat_sheet[i] = RunLength::decode(chunk.try_into().unwrap());
-        }
-        Self(cheat_sheet)
-    }
-
-    fn encode(&self) -> [u8; CHEATS * 3 * I32_SIZE] {
-        let mut encoded = [0u8; CHEATS * 3 * I32_SIZE];
-        for (i, rl) in self.0.iter().enumerate() {
-            let chunk = rl.encode();
-            encoded[i * 3 * I32_SIZE..(i + 1) * 3 * I32_SIZE].copy_from_slice(&chunk);
-        }
-        encoded
-    }
-
-    fn cheat(&self, pos: i32) -> Option<RunLength> {
-        self.0
-            .iter()
-            .find(|rl| rl.pos <= pos && pos < rl.pos + rl.len)
-            .copied()
     }
 }
 
-type OccTable = [i32; ALPHABETS];
-
-enum Checkpoint {
-    Body(CheatSheet, OccTable),
-    Tail(OccTable),
+impl Checkpoint {
+    fn new(occ: OccTable) -> Self {
+        Self { occ }
+    }
 }

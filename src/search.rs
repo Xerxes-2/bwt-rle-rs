@@ -26,6 +26,16 @@ impl Default for CacheRL {
     }
 }
 
+impl CacheRL {
+    fn hit(&self, pos: i32) -> Option<Self> {
+        if self.pos <= pos && pos < self.pos + self.len {
+            Some(*self)
+        } else {
+            None
+        }
+    }
+}
+
 impl PartialEq for CacheRL {
     fn eq(&self, other: &Self) -> bool {
         self.pos == other.pos
@@ -57,20 +67,11 @@ impl From<RunLength> for CacheRL {
     }
 }
 
+#[derive(Default)]
 pub struct Cache {
     hit: usize,
     miss: usize,
     inner: BTreeSet<CacheRL>,
-}
-
-impl Default for Cache {
-    fn default() -> Self {
-        Self {
-            hit: 0,
-            miss: 0,
-            inner: BTreeSet::new(),
-        }
-    }
 }
 
 impl Cache {
@@ -84,13 +85,7 @@ impl Cache {
                 },
             )
             .next_back()
-            .and_then(|rl| {
-                if rl.pos + rl.len > pos {
-                    Some(rl.to_owned())
-                } else {
-                    None
-                }
-            });
+            .and_then(|rl| rl.hit(pos));
         if let Some(rl) = rl {
             if rl.len == 1 {
                 self.inner.remove(&rl);
@@ -108,7 +103,7 @@ impl Cache {
         }
     }
 
-    fn summary(&self) {
+    pub fn summary(&self) {
         eprintln!("Cache hit: {}, miss: {}", self.hit, self.miss);
     }
 }
@@ -218,7 +213,7 @@ impl Context {
             self.rebuild_record(start, &mut buf);
             println!("[{}]{}", id, std::str::from_utf8(&buf).unwrap());
         });
-        self.cache.summary();
+        self.summary();
     }
 
     fn rebuild_record(&mut self, mut pos: i32, buf: &mut Vec<u8>) {

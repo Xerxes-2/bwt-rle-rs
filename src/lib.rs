@@ -7,10 +7,9 @@ pub mod index;
 pub mod search;
 pub const I32_SIZE: usize = std::mem::size_of::<i32>();
 pub const ALPHABETS: usize = 98;
-pub const CHEATS: usize = 8;
-pub const PIECE_LEN: usize = ALPHABETS * I32_SIZE + CHEATS * I32_SIZE * 3;
+pub const PIECE_LEN: usize = ALPHABETS * I32_SIZE;
 pub const CHECKPOINT_LEN: usize = PIECE_LEN + I32_SIZE;
-pub const CACHE_SIZE: usize = 150000;
+pub const CACHE_SIZE: usize = 250000;
 
 pub trait TryReadExact: Read {
     fn try_read_exact(&mut self, mut buf: &mut [u8]) -> std::io::Result<usize> {
@@ -55,5 +54,9 @@ impl Context {
             min_id: 0,
             cache: Cache::default(),
         }
+    }
+
+    pub fn summary(&self) {
+        self.cache.summary();
     }
 }
