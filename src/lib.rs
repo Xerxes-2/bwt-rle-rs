@@ -16,15 +16,19 @@ pub const CHECKPOINT_LEN: usize = PIECE_LEN + I32_SIZE;
 pub const CACHE_SIZE: usize = 15000;
 
 pub trait TryReadExact: Read {
-    fn try_read_exact(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
-        let buf_size = buf.len();
-        match self.read_exact(buf) {
-            Ok(_) => Ok(buf_size),
-            Err(e) if e.kind() == std::io::ErrorKind::UnexpectedEof => {
-                Ok(buf.iter().position(|&x| x == 0).unwrap())
+    fn try_read_exact(&mut self, mut buf: &mut [u8]) -> std::io::Result<usize> {
+        let mut read = 0;
+        while !buf.is_empty() {
+            match self.read(buf) {
+                Ok(0) => break,
+                Ok(n) => {
+                    buf = &mut buf[n..];
+                    read += n;
+                }
+                Err(e) => return Err(e),
             }
-            Err(e) => Err(e),
         }
+        Ok(read)
     }
 }
 
@@ -57,7 +61,7 @@ impl Context {
             positions,
             recs: 0,
             min_id: 0,
-            cache: Cache::new(),
+            cache: Cache::default(),
         }
     }
 }

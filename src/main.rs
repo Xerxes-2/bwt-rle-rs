@@ -1,18 +1,9 @@
 use bwt_rle_rs::{CHECKPOINT_LEN, I32_SIZE, index::gen_index};
-use cap::Cap;
 use std::{
-    alloc,
     fs::{File, OpenOptions},
     io::{BufReader, BufWriter, Read},
 };
-
-#[global_allocator]
-#[cfg(debug_assertions)]
-static ALLOCATOR: Cap<alloc::System> = Cap::new(alloc::System, usize::max_value());
-
 fn main() {
-    #[cfg(debug_assertions)]
-    ALLOCATOR.set_limit(11 * 1024 * 1024).unwrap();
     let args = std::env::args().collect::<Vec<String>>();
     if args.len() < 4 {
         eprintln!("Usage: {} <rlb_file> <index_file> <pattern>", args[0]);

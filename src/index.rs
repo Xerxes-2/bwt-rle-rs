@@ -16,7 +16,6 @@ pub const fn map_char(c: u8) -> u8 {
 }
 
 trait IsRunLength {
-    fn is_rl_head(&self) -> bool;
     fn is_rl_tail(&self) -> bool;
 }
 
@@ -25,33 +24,18 @@ const fn msb_u8(b: u8) -> bool {
 }
 
 impl IsRunLength for u8 {
-    fn is_rl_head(&self) -> bool {
-        !msb_u8(*self)
-    }
     fn is_rl_tail(&self) -> bool {
         msb_u8(*self)
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct RunLength {
     pub char: u8,
     pub len: i32,
     size: u8,
     pub pos: i32,
     pub rank: i32,
-}
-
-impl Default for RunLength {
-    fn default() -> Self {
-        Self {
-            char: 0,
-            len: 0,
-            size: 0,
-            pos: 0,
-            rank: 0,
-        }
-    }
 }
 
 impl RunLength {
@@ -73,7 +57,7 @@ impl RunLength {
 
     fn encode(&self) -> [u8; 3 * I32_SIZE] {
         // len and pos is at most 28 bits
-        let u64 = (self.char as u64) << 56 | (self.len as u64) << 28 | self.pos as u64;
+        let u64 = ((self.char as u64) << 56) | ((self.len as u64) << 28) | self.pos as u64;
         let u64 = u64.to_le_bytes();
         let mut encoded = [0u8; 3 * I32_SIZE];
         encoded[..8].copy_from_slice(&u64);
@@ -164,7 +148,7 @@ pub fn gen_index(
             .chain(
                 buf.iter()
                     .skip(CHECKPOINT_LEN)
-                    .take_while(|&&x| x.is_rl_head()),
+                    .take_while(|&&x| x.is_rl_tail()),
             )
             .skip_while(|&x| x.is_rl_tail());
 
@@ -181,8 +165,6 @@ pub fn gen_index(
                 rl = RunLength::new(b, cur_pos);
             }
         });
-        rl.set_rank(occ[rl.map_char() as usize]);
-        pq.push(rl);
         rl.update_occ(&mut occ);
         cur_pos += rl.len;
 
@@ -208,7 +190,7 @@ pub fn gen_index(
         .flat_map(i32::to_le_bytes)
         .collect::<Vec<_>>();
     index.write_all(&positions_raw).unwrap();
-    return positions;
+    positions
 }
 
 pub fn gen_c_table(
@@ -220,7 +202,7 @@ pub fn gen_c_table(
     let mut c_table = [0; ALPHABETS + 1];
     if let Some(index) = index {
         index
-            .seek(SeekFrom::End((ALPHABETS * I32_SIZE) as i64 * -1))
+            .seek(SeekFrom::End(-((ALPHABETS * I32_SIZE) as i64)))
             .unwrap();
         let mut buf = [0u8; ALPHABETS * I32_SIZE];
         index.read_exact(&mut buf).unwrap();
@@ -306,7 +288,7 @@ impl Context {
         }
 
         let addition = if rl.char == ch { pos - pos_bwt } else { 0 };
-        return occ[map_char(ch) as usize] + addition;
+        occ[map_char(ch) as usize] + addition
     }
 
     fn read_cp(&mut self, nearest_cp: usize) -> Checkpoint {
@@ -368,10 +350,10 @@ impl Context {
         let mut buf = [0u8; CHECKPOINT_LEN + 4];
         let n = self.rlb.try_read_exact(&mut buf).unwrap();
         let mut iter = buf.into_iter().take(n).skip_while(|x| x.is_rl_tail());
-        let Some(ch) = iter.next() else {
+        let Some(b) = iter.next() else {
             unreachable!("Empty run-length")
         };
-        let mut rl = RunLength::new(ch, 0);
+        let mut rl = RunLength::new(b, 0);
         for b in iter {
             if b.is_rl_tail() {
                 rl.extend_byte(b);
@@ -392,7 +374,7 @@ impl Context {
             rl.set_rank(occ[map_char(rl.char) as usize]);
         }
         rl.pos = pos_bwt;
-        return rl;
+        rl
     }
 }
 

@@ -61,13 +61,15 @@ pub struct Cache {
     inner: BTreeSet<CacheRL>,
 }
 
-impl Cache {
-    pub fn new() -> Self {
+impl Default for Cache {
+    fn default() -> Self {
         Self {
             inner: BTreeSet::new(),
         }
     }
+}
 
+impl Cache {
     fn search(&mut self, pos: i32) -> Option<CacheRL> {
         let rl = self
             .inner
@@ -78,14 +80,13 @@ impl Cache {
                 },
             )
             .next_back()
-            .map(|rl| {
+            .and_then(|rl| {
                 if rl.pos + rl.len > pos {
                     Some(rl.to_owned())
                 } else {
                     None
                 }
-            })
-            .flatten();
+            });
         if let Some(rl) = rl {
             if rl.len == 1 {
                 self.inner.remove(&rl);
