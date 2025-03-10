@@ -319,11 +319,12 @@ impl Context {
         }
     }
 
-    pub fn decode(&mut self, pos: i32, cp: usize) -> RunLength {
-        let mut pos_bwt = self.positions[cp];
-        let pos_rlb = cp * CHECKPOINT_LEN;
+    pub fn decode(&mut self, pos: i32) -> RunLength {
+        let nearest_cp = self.find_checkpoint(pos);
+        let mut pos_bwt = self.positions[nearest_cp];
+        let pos_rlb = nearest_cp * CHECKPOINT_LEN;
 
-        let cp = self.read_cp(cp);
+        let cp = self.read_cp(nearest_cp);
         if let Checkpoint::Body(ref cs, _) = cp {
             if let Some(mut rl) = cs.cheat(pos) {
                 rl.set_rank(rl.rank + pos - rl.pos);
