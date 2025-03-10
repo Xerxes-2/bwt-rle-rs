@@ -57,26 +57,38 @@ impl From<RunLength> for CacheRL {
     }
 }
 
+impl CacheRL {
+    fn hit(&self, pos: i32) -> Option<Self> {
+        if self.pos <= pos && pos < self.pos + self.len {
+            Some(*self)
+        } else {
+            None
+        }
+    }
+}
+
 pub struct Cache {
     hit: usize,
     miss: usize,
-    inner: BTreeSet<CacheRL>,
+    size: usize,
+    inner: Vec<BTreeSet<CacheRL>>,
 }
 
-impl Default for Cache {
-    fn default() -> Self {
+impl Cache {
+    pub fn new(cps: usize) -> Self {
         Self {
             hit: 0,
             miss: 0,
-            inner: BTreeSet::new(),
+            size: 0,
+            inner: vec![BTreeSet::new(); cps + 1],
         }
     }
 }
 
 impl Cache {
-    fn search(&mut self, pos: i32) -> Option<CacheRL> {
-        let rl = self
-            .inner
+    fn search(&mut self, pos: i32, cp: usize) -> Option<CacheRL> {
+        let cp = &mut self.inner[cp];
+        let rl = cp
             .range(
                 ..=CacheRL {
                     pos,
@@ -84,16 +96,11 @@ impl Cache {
                 },
             )
             .next_back()
-            .and_then(|rl| {
-                if rl.pos + rl.len > pos {
-                    Some(rl.to_owned())
-                } else {
-                    None
-                }
-            });
+            .and_then(|rl| rl.hit(pos));
         if let Some(rl) = rl {
             if rl.len == 1 {
-                self.inner.remove(&rl);
+                cp.remove(&rl);
+                self.size -= 1;
             }
             self.hit += 1;
         } else {
@@ -102,9 +109,10 @@ impl Cache {
         rl
     }
 
-    fn insert(&mut self, rl: CacheRL) {
-        if self.inner.len() < CACHE_SIZE {
-            self.inner.insert(rl);
+    fn insert(&mut self, rl: CacheRL, cp: usize) {
+        if self.size < CACHE_SIZE {
+            self.inner[cp].insert(rl);
+            self.size += 1;
         }
     }
 
@@ -172,14 +180,15 @@ impl Context {
     }
 
     fn cached_decode(&mut self, pos: i32) -> CacheRL {
-        if let Some(mut rl) = self.cache.search(pos) {
+        let cp = self.find_checkpoint(pos);
+        if let Some(mut rl) = self.cache.search(pos, cp) {
             rl.rank = rl.rank + pos - rl.pos;
             return rl;
         }
-        let rl: CacheRL = self.decode(pos).into();
+        let rl: CacheRL = self.decode(pos, cp).into();
         let mut cached_rl = rl;
         cached_rl.rank = rl.rank - pos + rl.pos;
-        self.cache.insert(cached_rl);
+        self.cache.insert(cached_rl, cp);
         rl
     }
 

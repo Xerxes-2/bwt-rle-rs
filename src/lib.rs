@@ -10,7 +10,7 @@ pub const ALPHABETS: usize = 98;
 pub const CHEATS: usize = 8;
 pub const PIECE_LEN: usize = ALPHABETS * I32_SIZE + CHEATS * I32_SIZE * 3;
 pub const CHECKPOINT_LEN: usize = PIECE_LEN + I32_SIZE;
-pub const CACHE_SIZE: usize = 150000;
+pub const CACHE_SIZE: usize = 250000;
 
 pub trait TryReadExact: Read {
     fn try_read_exact(&mut self, mut buf: &mut [u8]) -> std::io::Result<usize> {
@@ -53,7 +53,7 @@ impl Context {
             positions,
             recs: 0,
             min_id: 0,
-            cache: Cache::default(),
+            cache: Cache::new(cps),
         }
     }
 }
