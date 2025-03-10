@@ -58,12 +58,16 @@ impl From<RunLength> for CacheRL {
 }
 
 pub struct Cache {
+    hit: usize,
+    miss: usize,
     inner: BTreeSet<CacheRL>,
 }
 
 impl Default for Cache {
     fn default() -> Self {
         Self {
+            hit: 0,
+            miss: 0,
             inner: BTreeSet::new(),
         }
     }
@@ -91,6 +95,9 @@ impl Cache {
             if rl.len == 1 {
                 self.inner.remove(&rl);
             }
+            self.hit += 1;
+        } else {
+            self.miss += 1;
         }
         rl
     }
@@ -99,6 +106,10 @@ impl Cache {
         if self.inner.len() < CACHE_SIZE {
             self.inner.insert(rl);
         }
+    }
+
+    fn summary(&self) {
+        eprintln!("Cache hit: {}, miss: {}", self.hit, self.miss);
     }
 }
 
@@ -207,6 +218,7 @@ impl Context {
             self.rebuild_record(start, &mut buf);
             println!("[{}]{}", id, std::str::from_utf8(&buf).unwrap());
         });
+        self.cache.summary();
     }
 
     fn rebuild_record(&mut self, mut pos: i32, buf: &mut Vec<u8>) {

@@ -1,7 +1,7 @@
 use bwt_rle_rs::{CHECKPOINT_LEN, I32_SIZE, index::gen_index};
 use std::{
     fs::{File, OpenOptions},
-    io::{BufReader, BufWriter, Read},
+    io::Read,
 };
 fn main() {
     let args = std::env::args().collect::<Vec<String>>();
@@ -11,17 +11,16 @@ fn main() {
     }
     let rlb_name = &args[1];
     let index_name = &args[2];
-    let rlb = OpenOptions::new().read(true).open(rlb_name).unwrap();
+    let mut rlb = OpenOptions::new().read(true).open(rlb_name).unwrap();
     let rlb_size = rlb.metadata().unwrap().len();
-    let mut rlb = BufReader::new(rlb);
     let checkpoints = rlb_size as usize / CHECKPOINT_LEN;
     let positions: Vec<i32>;
-    let mut index: Option<BufReader<File>>;
+    let mut index: Option<File>;
     if checkpoints > 0 {
         if let Ok(index_file) = OpenOptions::new().read(true).open(index_name) {
             let mut p = vec![0u8; (checkpoints + 1) * I32_SIZE];
             let p_tail = &mut p[I32_SIZE..];
-            index = Some(BufReader::new(index_file));
+            index = Some(index_file);
             index.as_mut().unwrap().read_exact(p_tail).unwrap();
             positions = p
                 .chunks_exact(I32_SIZE)
@@ -30,14 +29,13 @@ fn main() {
         } else {
             // Create index file
             File::create(index_name).unwrap();
-            let index_file = OpenOptions::new()
+            let mut index_file = OpenOptions::new()
                 .read(true)
                 .write(true)
                 .open(index_name)
                 .unwrap();
-            let mut writer = BufWriter::new(index_file);
-            positions = gen_index(&mut rlb, &mut writer, checkpoints);
-            index = Some(BufReader::new(writer.into_inner().unwrap()));
+            positions = gen_index(&mut rlb, &mut index_file, checkpoints);
+            index = Some(index_file);
         }
     } else {
         positions = vec![0];

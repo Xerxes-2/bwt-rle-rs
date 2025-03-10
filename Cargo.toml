@@ -6,8 +6,8 @@ edition = "2024"
 [dependencies]
 
 [profile.release]
+# debug = true
 strip = true
 lto = true
-opt-level = "z"
 codegen-units = 1
 panic = "abort"

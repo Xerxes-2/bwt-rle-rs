@@ -1,7 +1,4 @@
-use std::{
-    fs::File,
-    io::{BufReader, Read},
-};
+use std::{fs::File, io::Read};
 
 use index::gen_c_table;
 use search::Cache;
@@ -13,7 +10,7 @@ pub const ALPHABETS: usize = 98;
 pub const CHEATS: usize = 8;
 pub const PIECE_LEN: usize = ALPHABETS * I32_SIZE + CHEATS * I32_SIZE * 3;
 pub const CHECKPOINT_LEN: usize = PIECE_LEN + I32_SIZE;
-pub const CACHE_SIZE: usize = 15000;
+pub const CACHE_SIZE: usize = 150000;
 
 pub trait TryReadExact: Read {
     fn try_read_exact(&mut self, mut buf: &mut [u8]) -> std::io::Result<usize> {
@@ -32,26 +29,21 @@ pub trait TryReadExact: Read {
     }
 }
 
-impl TryReadExact for BufReader<File> {}
+impl TryReadExact for File {}
 
 pub struct Context {
-    rlb: BufReader<File>,           // rlb file
-    index: Option<BufReader<File>>, // index file
-    cps: usize,                     // number of checkpoints
-    c_table: [i32; ALPHABETS + 1],  // c table
-    positions: Vec<i32>,            // positions
-    min_id: i32,                    // minimum id
-    recs: i32,                      // number of records
-    cache: Cache,                   // cache
+    rlb: File,                     // rlb file
+    index: Option<File>,           // index file
+    cps: usize,                    // number of checkpoints
+    c_table: [i32; ALPHABETS + 1], // c table
+    positions: Vec<i32>,           // positions
+    min_id: i32,                   // minimum id
+    recs: i32,                     // number of records
+    cache: Cache,                  // cache
 }
 
 impl Context {
-    pub fn new(
-        mut rlb: BufReader<File>,
-        mut index: Option<BufReader<File>>,
-        cps: usize,
-        positions: Vec<i32>,
-    ) -> Self {
+    pub fn new(mut rlb: File, mut index: Option<File>, cps: usize, positions: Vec<i32>) -> Self {
         let c_table = gen_c_table(&mut rlb, index.as_mut(), cps);
         Self {
             rlb,

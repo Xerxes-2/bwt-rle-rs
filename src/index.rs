@@ -1,7 +1,7 @@
 use std::{
     collections::BinaryHeap,
     fs::File,
-    io::{BufReader, BufWriter, Read, Seek, SeekFrom, Write},
+    io::{Read, Seek, SeekFrom, Write},
 };
 
 use crate::{ALPHABETS, CHEATS, CHECKPOINT_LEN, Context, I32_SIZE, PIECE_LEN, TryReadExact};
@@ -40,8 +40,6 @@ pub struct RunLength {
 
 impl RunLength {
     fn new(char: u8, pos: i32) -> Self {
-        assert!(!char.is_rl_tail());
-        assert!(pos >= 0);
         Self {
             char,
             len: 1,
@@ -71,10 +69,6 @@ impl RunLength {
         let len = ((u64 >> 28) & 0x0fff_ffff) as i32;
         let pos = (u64 & 0x0fff_ffff) as i32;
         let rank = i32::from_le_bytes(encoded[8..].try_into().unwrap());
-        assert!(!char.is_rl_tail());
-        assert!(len > 0);
-        assert!(pos >= 0);
-        assert!(rank >= 0);
         Self {
             char,
             len,
@@ -85,7 +79,6 @@ impl RunLength {
     }
 
     fn set_rank(&mut self, rank: i32) {
-        assert!(rank >= 0);
         self.rank = rank;
     }
 
@@ -124,11 +117,7 @@ impl Ord for RunLength {
     }
 }
 
-pub fn gen_index(
-    rlb: &mut BufReader<File>,
-    index: &mut BufWriter<File>,
-    checkpoints: usize,
-) -> Vec<i32> {
+pub fn gen_index(rlb: &mut File, index: &mut File, checkpoints: usize) -> Vec<i32> {
     rlb.rewind().unwrap();
     index
         .seek(SeekFrom::Start((I32_SIZE * checkpoints) as u64))
@@ -194,8 +183,8 @@ pub fn gen_index(
 }
 
 pub fn gen_c_table(
-    rlb: &mut BufReader<File>,
-    index: Option<&mut BufReader<File>>,
+    rlb: &mut File,
+    index: Option<&mut File>,
     checkpoints: usize,
 ) -> [i32; ALPHABETS + 1] {
     let last_pos = checkpoints * CHECKPOINT_LEN;
