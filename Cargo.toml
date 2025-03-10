@@ -6,8 +6,12 @@ edition = "2024"
 [dependencies]
 
 [profile.release]
-# debug = true
 strip = true
 lto = true
 codegen-units = 1
 panic = "abort"
+
+[profile.bench]
+inherits = "release"
+debug = true
+strip = false

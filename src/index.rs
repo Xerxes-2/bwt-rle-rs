@@ -5,12 +5,22 @@ use std::{
 
 use crate::{ALPHABETS, CHECKPOINT_LEN, Context, I32_SIZE, PIECE_LEN, TryReadExact};
 
-pub const fn map_char(c: u8) -> u8 {
+pub const fn map_char(c: u8) -> usize {
     match c {
         9 => 0,
         10 => 1,
         13 => 2,
-        _ => c - 29,
+        _ => c as usize - 29,
+    }
+}
+
+pub trait Mapper {
+    fn map_char(&self) -> usize;
+}
+
+impl Mapper for u8 {
+    fn map_char(&self) -> usize {
+        map_char(*self)
     }
 }
 
@@ -48,12 +58,12 @@ impl RunLength {
         }
     }
 
-    fn map_char(&self) -> u8 {
-        map_char(self.char)
+    fn map_char(&self) -> usize {
+        self.char.map_char()
     }
 
-    fn set_rank(&mut self, rank: i32) {
-        self.rank = rank;
+    fn occ(&self, occ: &OccTable) -> i32 {
+        occ[self.map_char()]
     }
 
     fn extend_byte(&mut self, b: u8) {
@@ -67,7 +77,7 @@ impl RunLength {
     }
 
     fn update_occ(&self, occ: &mut OccTable) {
-        occ[map_char(self.char) as usize] += self.len;
+        occ[self.map_char()] += self.len;
     }
 }
 
@@ -100,7 +110,7 @@ pub fn gen_index(rlb: &mut File, index: &mut File, checkpoints: usize) -> Vec<i3
             if b.is_rl_tail() {
                 rl.extend_byte(b);
             } else {
-                rl.set_rank(occ[rl.map_char() as usize]);
+                rl.rank = rl.occ(&occ);
                 rl.update_occ(&mut occ);
                 cur_pos += rl.len;
                 rl = RunLength::new(b, cur_pos);
@@ -159,11 +169,11 @@ pub fn gen_c_table(
         if b.is_rl_tail() {
             rl.extend_byte(b);
         } else {
-            c_table[map_char(rl.char) as usize + 1] += rl.len;
+            c_table[rl.map_char() + 1] += rl.len;
             rl = RunLength::new(b, 0);
         }
     });
-    c_table[map_char(rl.char) as usize + 1] += rl.len;
+    c_table[rl.map_char() as usize + 1] += rl.len;
 
     c_table.iter_mut().fold(0, |acc, x| {
         *x += acc;
@@ -174,7 +184,7 @@ pub fn gen_c_table(
 
 impl Context {
     pub fn nth_char_pos(&self, nth: i32, ch: u8) -> i32 {
-        self.c_table[map_char(ch) as usize] + nth
+        self.c_table[ch.map_char()] + nth
     }
 
     pub fn find_checkpoint(&self, pos: i32) -> usize {
@@ -185,22 +195,10 @@ impl Context {
         let nearest_cp = self.find_checkpoint(pos);
         let mut pos_bwt = self.positions[nearest_cp];
         let pos_rlb = nearest_cp * CHECKPOINT_LEN;
-        let mut occ = [0i32; ALPHABETS];
-        if nearest_cp > 0 {
-            let index = self.index.as_mut().unwrap();
-            index
-                .seek(SeekFrom::Start(
-                    (self.cps * I32_SIZE + (nearest_cp - 1) * PIECE_LEN) as u64,
-                ))
-                .unwrap();
-            let mut buf = [0u8; ALPHABETS * I32_SIZE];
-            index.read_exact(&mut buf).unwrap();
-            buf.chunks_exact(I32_SIZE)
-                .enumerate()
-                .for_each(|(i, b)| occ[i] = i32::from_le_bytes(b.try_into().unwrap()));
-        }
+        let cp = self.read_cp(nearest_cp);
+        let mut occ = cp.occ;
         if pos_bwt == pos {
-            return occ[map_char(ch) as usize];
+            return occ[ch.map_char()];
         }
         self.rlb.seek(SeekFrom::Start(pos_rlb as u64)).unwrap();
         let mut buf = [0u8; CHECKPOINT_LEN + 4];
@@ -221,7 +219,7 @@ impl Context {
             } else {
                 if pos_bwt + rl.len > pos {
                     let addition = if rl.char == ch { pos - pos_bwt } else { 0 };
-                    return occ[map_char(ch) as usize] + addition;
+                    return occ[ch.map_char()] + addition;
                 }
                 pos_bwt += rl.len;
                 rl.update_occ(&mut occ);
@@ -230,7 +228,7 @@ impl Context {
         }
 
         let addition = if rl.char == ch { pos - pos_bwt } else { 0 };
-        occ[map_char(ch) as usize] + addition
+        occ[ch.map_char()] + addition
     }
 
     fn read_cp(&mut self, nearest_cp: usize) -> Checkpoint {
@@ -240,7 +238,7 @@ impl Context {
             (Some(index), _) => {
                 let read_pos = self.cps * I32_SIZE + (nearest_cp - 1) * PIECE_LEN;
                 index.seek(SeekFrom::Start(read_pos as u64)).unwrap();
-                let mut buf = [0u8; ALPHABETS * I32_SIZE];
+                let mut buf = [0u8; ALPHABETS * I32_SIZE] as [u8; PIECE_LEN];
                 index.read_exact(&mut buf).unwrap();
                 let mut occ = [0i32; ALPHABETS];
                 buf.chunks_exact(I32_SIZE)
@@ -277,7 +275,7 @@ impl Context {
                 rl.extend_byte(b);
             } else {
                 if pos_bwt + rl.len > pos {
-                    rl.set_rank(occ[map_char(rl.char) as usize] + pos - pos_bwt);
+                    rl.rank = rl.occ(&occ) + pos - pos_bwt;
                     rl.pos = pos_bwt;
                     return rl;
                 }
@@ -287,9 +285,9 @@ impl Context {
             }
         }
         if rl.size > 0 {
-            rl.set_rank(occ[map_char(rl.char) as usize] + pos - pos_bwt);
+            rl.rank = rl.occ(&occ) + pos - pos_bwt;
         } else {
-            rl.set_rank(occ[map_char(rl.char) as usize]);
+            rl.rank = rl.occ(&occ);
         }
         rl.pos = pos_bwt;
         rl

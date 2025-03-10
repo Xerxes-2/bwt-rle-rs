@@ -2,7 +2,7 @@ use std::{collections::BTreeSet, ops::Range};
 
 use crate::{
     CACHE_SIZE, Context,
-    index::{RunLength, map_char},
+    index::{Mapper, RunLength, map_char},
 };
 
 const MAX_RECORD_LEN: usize = 5000;
@@ -85,7 +85,11 @@ impl Cache {
                 },
             )
             .next_back()
-            .and_then(|rl| rl.hit(pos));
+            .and_then(|rl| rl.hit(pos))
+            .map(|mut rl| {
+                rl.rank = rl.rank + pos - rl.pos;
+                rl
+            });
         if let Some(rl) = rl {
             if rl.len == 1 {
                 self.inner.remove(&rl);
@@ -110,8 +114,8 @@ impl Cache {
 
 impl Context {
     fn search_pattern(&mut self, pattern: &[u8]) -> Range<i32> {
-        let mut index_start = self.c_table[map_char(pattern[0]) as usize];
-        let mut index_end = self.c_table[map_char(pattern[0]) as usize + 1];
+        let mut index_start = self.c_table[pattern[0].map_char()];
+        let mut index_end = self.c_table[pattern[0].map_char() + 1];
         let mut ooc_start;
         let mut ooc_end;
         for &ch in pattern.iter().skip(1) {
@@ -123,7 +127,7 @@ impl Context {
         index_start..index_end
     }
     fn find_metadata(&mut self) {
-        let map_lb = map_char(b'[') as usize;
+        let map_lb = map_char(b'[');
         self.recs = self.c_table[map_lb + 1] - self.c_table[map_lb];
         let mut l = 0;
         let mut r = self.search_id_in_pos(0);
@@ -167,8 +171,7 @@ impl Context {
     }
 
     fn cached_decode(&mut self, pos: i32) -> CacheRL {
-        if let Some(mut rl) = self.cache.search(pos) {
-            rl.rank = rl.rank + pos - rl.pos;
+        if let Some(rl) = self.cache.search(pos) {
             return rl;
         }
         let rl: CacheRL = self.decode(pos).into();
@@ -181,7 +184,7 @@ impl Context {
     fn search_pos_of_id(&mut self, id: i32) -> i32 {
         let mut pat = format!("[{}", id).into_bytes();
         pat.reverse();
-        let mut pos = self.c_table[map_char(b']') as usize];
+        let mut pos = self.c_table[map_char(b']')];
         pat.iter().for_each(|&ch| {
             let occ = self.occ_fn(ch, pos);
             pos = self.nth_char_pos(occ, ch);
