@@ -1,6 +1,7 @@
 use std::{
     fs::File,
     io::{Read, Result},
+    sync::Mutex,
 };
 
 use index::gen_c_table;
@@ -94,7 +95,7 @@ pub struct Context {
     positions: Vec<i32>,           // positions
     min_id: i32,                   // minimum id
     recs: i32,                     // number of records
-    cache: Cache,                  // cache
+    cache: Mutex<Cache>,           // cache
 }
 
 impl Context {
@@ -108,11 +109,11 @@ impl Context {
             positions,
             recs: 0,
             min_id: 0,
-            cache: Cache::default(),
+            cache: Mutex::new(Cache::default()),
         }
     }
 
     pub fn summary(&self) {
-        self.cache.summary();
+        self.cache.lock().unwrap().summary();
     }
 }

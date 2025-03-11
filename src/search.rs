@@ -1,4 +1,9 @@
-use std::{collections::BTreeSet, ops::Range};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    ops::Range,
+};
+
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
 use crate::{
     Context, MAX_CACHE,
@@ -90,10 +95,7 @@ impl Cache {
                 rl.rank = rl.rank + pos - rl.pos;
                 rl
             });
-        if let Some(rl) = rl {
-            if rl.len == 1 {
-                self.inner.remove(&rl);
-            }
+        if let Some(_) = rl {
             self.hit += 1;
         } else {
             self.miss += 1;
@@ -148,7 +150,7 @@ impl Context {
         self.min_id = l;
     }
 
-    fn search_id_in_pos(&mut self, mut pos: i32) -> i32 {
+    fn search_id_in_pos(&self, mut pos: i32) -> i32 {
         let mut buf = Vec::with_capacity(16);
         let mut id = false;
         let mut rl = self.cached_decode(pos);
@@ -170,14 +172,14 @@ impl Context {
         str_id.parse().unwrap()
     }
 
-    fn cached_decode(&mut self, pos: i32) -> CacheRL {
-        if let Some(rl) = self.cache.search(pos) {
+    fn cached_decode(&self, pos: i32) -> CacheRL {
+        if let Some(rl) = self.cache.lock().unwrap().search(pos) {
             return rl;
         }
         let rl: CacheRL = self.decode(pos).into();
         let mut cached_rl = rl;
         cached_rl.rank = rl.rank - pos + rl.pos;
-        self.cache.insert(cached_rl);
+        self.cache.lock().unwrap().insert(cached_rl);
         rl
     }
 
@@ -195,37 +197,69 @@ impl Context {
     pub fn search(&mut self, pattern: &[u8]) {
         self.get_metadata();
         let range = self.search_pattern(pattern);
-        let matches = range.len();
-        let mut ids = Vec::with_capacity(matches);
-        for i in range {
-            let id = self.search_id_in_pos(i) + 1;
-            ids.push(id);
-        }
+        let mut ids = range
+            .into_iter()
+            .map(|i| self.search_id_in_pos(i) + 1)
+            .collect::<Vec<_>>();
         ids.sort_unstable();
         ids.dedup();
-        let mut buf = Vec::with_capacity(MAX_RECORD_LEN);
+        let matches = ids.len();
         let upper = self.min_id + self.recs;
-        ids.into_iter().for_each(|id| {
-            let start = if id == upper {
-                self.search_pos_of_id(self.min_id)
-            } else {
-                self.search_pos_of_id(id)
-            };
-            let id = id - 1;
-            buf.clear();
-            self.rebuild_record(start, &mut buf);
-            println!("[{}]{}", id, std::str::from_utf8(&buf).unwrap());
+        let pool = rayon::ThreadPoolBuilder::new()
+            .num_threads(8)
+            .build()
+            .unwrap();
+        let (tx, rx) = std::sync::mpsc::channel::<(i32, String)>();
+        pool.scope_fifo(move |s| {
+            let ids_clone = ids.clone();
+            let rx = rx;
+            s.spawn_fifo(move |_| {
+                let mut collection = BTreeMap::new();
+                let mut cur = 0;
+                for _ in 0..matches {
+                    let (id, rec) = rx.recv().unwrap();
+                    if id == ids_clone[cur] {
+                        println!("[{}]{}", id - 1, rec);
+                        cur += 1;
+                        if cur == matches {
+                            return;
+                        }
+                        while let Some(rec) = collection.remove(&ids_clone[cur]) {
+                            println!("[{}]{}", ids_clone[cur] - 1, rec);
+                            cur += 1;
+                            if cur == matches {
+                                return;
+                            }
+                        }
+                    } else {
+                        collection.insert(id, rec);
+                    }
+                }
+            });
+            let buf = [0u8; MAX_RECORD_LEN];
+            ids.par_iter().for_each_with((tx, buf), |(tx, buf), &id| {
+                let start = if id == upper {
+                    self.search_pos_of_id(self.min_id)
+                } else {
+                    self.search_pos_of_id(id)
+                };
+                let body = self.rebuild_record(start, buf);
+                let res = body.to_string();
+                tx.send((id, res)).unwrap();
+            });
         });
-        self.summary();
     }
 
-    fn rebuild_record(&mut self, mut pos: i32, buf: &mut Vec<u8>) {
+    fn rebuild_record<'a>(&self, mut pos: i32, buf: &'a mut [u8]) -> &'a str {
         let mut rl = self.cached_decode(pos);
+        let mut cur = 0;
         while rl.ch != b']' {
-            buf.push(rl.ch);
+            buf[cur] = rl.ch;
+            cur += 1;
             pos = self.nth_char_pos(rl.rank, rl.ch);
             rl = self.cached_decode(pos);
         }
-        buf.reverse();
+        buf[..cur].reverse();
+        std::str::from_utf8(&buf[..cur]).unwrap()
     }
 }
