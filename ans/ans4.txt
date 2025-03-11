@@ -1,0 +1,3 @@
+[5]bin
+[6]bind
+[7]binding

@@ -1,0 +1,45 @@
+#!/bin/bash
+#set -x #echo on
+
+echo "Testing begins ..."
+echo ""
+
+rm -f *.o bwtsearch test/*.out test/*.idx
+
+# COMPILE
+cargo build -r
+cp target/release/bwt-rle-rs bwtsearch
+
+# SEARCH
+if [ -f bwtsearch ] ; then
+    ./bwtsearch test/small1.rlb test/small1.idx "ban" > test/test1.out
+    ./bwtsearch test/small1.rlb test/small1.idx "an" > test/test2.out
+    ./bwtsearch test/small1.rlb test/small1.idx "and" > test/test3.out
+    ./bwtsearch test/small1.rlb test/small1.idx "in" > test/test4.out
+    ./bwtsearch test/small1.rlb test/small1.idx "ing" > test/test5.out
+    ./bwtsearch test/small2.rlb test/small2.idx "NY" > test/test6.out
+    ./bwtsearch test/small2.rlb test/small2.idx "Ship" > test/test7.out
+    ./bwtsearch test/small2.rlb test/small2.idx "Nov" > test/test8.out
+    ./bwtsearch test/small2.rlb test/small2.idx "an internal change" > test/test9.out
+    ./bwtsearch test/small2.rlb test/small2.idx "software" > test/test10.out
+    
+    for ((k=1;k<11;++k))
+    do
+	touch test/test$k.out
+	correct=`eval diff -q ans/ans$k.txt test/test$k.out`
+	if [ -z "$correct" ]; then
+	    echo "test$k: CORRECT"
+	else
+	    echo "test$k: FAILED"
+	fi
+    done
+
+    echo ""
+    echo "Testing - total 10 tests,"
+    echo "You can find out each test's query by 'cat ~cs9319/a2/autotest'"
+    echo ""
+
+else
+    echo "Failed to make bwtsearch."
+fi
+

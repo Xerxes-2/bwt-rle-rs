@@ -1,7 +1,4 @@
-use std::{
-    collections::{BTreeMap, BTreeSet},
-    ops::Range,
-};
+use std::{collections::BTreeSet, ops::Range};
 
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
@@ -203,49 +200,22 @@ impl Context {
             .collect::<Vec<_>>();
         ids.sort_unstable();
         ids.dedup();
-        let matches = ids.len();
         let upper = self.min_id + self.recs;
         let pool = rayon::ThreadPoolBuilder::new()
-            .num_threads(8)
+            .num_threads(1)
+            .use_current_thread()
             .build()
             .unwrap();
-        let (tx, rx) = std::sync::mpsc::channel::<(i32, String)>();
-        pool.scope_fifo(move |s| {
-            let ids_clone = ids.clone();
-            let rx = rx;
-            s.spawn_fifo(move |_| {
-                let mut collection = BTreeMap::new();
-                let mut cur = 0;
-                for _ in 0..matches {
-                    let (id, rec) = rx.recv().unwrap();
-                    if id == ids_clone[cur] {
-                        println!("[{}]{}", id - 1, rec);
-                        cur += 1;
-                        if cur == matches {
-                            return;
-                        }
-                        while let Some(rec) = collection.remove(&ids_clone[cur]) {
-                            println!("[{}]{}", ids_clone[cur] - 1, rec);
-                            cur += 1;
-                            if cur == matches {
-                                return;
-                            }
-                        }
-                    } else {
-                        collection.insert(id, rec);
-                    }
-                }
-            });
+        pool.install(move || {
             let buf = [0u8; MAX_RECORD_LEN];
-            ids.par_iter().for_each_with((tx, buf), |(tx, buf), &id| {
+            ids.par_iter().for_each_with(buf, |buf, &id| {
                 let start = if id == upper {
                     self.search_pos_of_id(self.min_id)
                 } else {
                     self.search_pos_of_id(id)
                 };
                 let body = self.rebuild_record(start, buf);
-                let res = body.to_string();
-                tx.send((id, res)).unwrap();
+                println!("[{}]{}", id - 1, body);
             });
         });
     }

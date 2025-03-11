@@ -1,0 +1,1769 @@
+desc: --pages-as-heap=yes --massif-out-file=ms.out
+cmd: ./target/release/bwt-rle-rs test/large2.rlb test/large2.idx science
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=421888
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=0
+mem_heap_B=442368
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=0
+mem_heap_B=602112
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=0
+mem_heap_B=618496
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=0
+mem_heap_B=622592
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=5
+#-----------
+time=0
+mem_heap_B=626688
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=0
+mem_heap_B=630784
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=0
+mem_heap_B=634880
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=8
+#-----------
+time=0
+mem_heap_B=638976
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=0
+mem_heap_B=638976
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n2: 638976 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n0: 634880 0x0: ???
+ n0: 4096 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=10
+#-----------
+time=0
+mem_heap_B=634880
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=11
+#-----------
+time=0
+mem_heap_B=634880
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=12
+#-----------
+time=16255
+mem_heap_B=643072
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=13
+#-----------
+time=16908
+mem_heap_B=843776
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=14
+#-----------
+time=16936
+mem_heap_B=978944
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=15
+#-----------
+time=16960
+mem_heap_B=978944
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n3: 978944 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n0: 634880 0x0: ???
+ n1: 344064 0x401B534: __mmap64 (mmap64.c:58)
+  n3: 344064 0x401B534: mmap (mmap64.c:46)
+   n1: 200704 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 200704 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 200704 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n1: 200704 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 200704 0x4015DFF: map_doit (rtld.c:644)
+        n1: 200704 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 200704 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 200704 0x4015F13: do_preload (rtld.c:816)
+           n1: 200704 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 200704 0x40196CF: dl_main (rtld.c:1842)
+             n1: 200704 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 200704 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 200704 0x4016B93: _dl_start (rtld.c:581)
+                n0: 200704 0x401AA53: (below main) (dl-start.S:30)
+   n1: 135168 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 135168 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 135168 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n1: 135168 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n0: 8192 in 1 place, below massif's threshold (1.00%)
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=16
+#-----------
+time=16960
+mem_heap_B=974848
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=16987
+mem_heap_B=917504
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=18
+#-----------
+time=17078
+mem_heap_B=921600
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=19
+#-----------
+time=18787
+mem_heap_B=946176
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=20
+#-----------
+time=20912
+mem_heap_B=1212416
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=21
+#-----------
+time=20940
+mem_heap_B=1413120
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=22
+#-----------
+time=20964
+mem_heap_B=1413120
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n3: 1413120 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n1: 778240 0x401B534: __mmap64 (mmap64.c:58)
+  n4: 778240 0x401B534: mmap (mmap64.c:46)
+   n1: 401408 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 401408 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 401408 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 401408 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 266240 0x400259B: openaux (dl-deps.c:64)
+        n1: 266240 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 266240 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 266240 0x4018153: dl_main (rtld.c:1965)
+           n1: 266240 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 266240 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 266240 0x4016B93: _dl_start (rtld.c:581)
+              n0: 266240 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 335872 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 335872 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 335872 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 335872 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 200704 0x400259B: openaux (dl-deps.c:64)
+        n1: 200704 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 200704 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 200704 0x4018153: dl_main (rtld.c:1965)
+           n1: 200704 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 200704 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 200704 0x4016B93: _dl_start (rtld.c:581)
+              n0: 200704 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 24576 0x400A41F: _dl_sysdep_read_whole_file (dl-misc.c:49)
+    n1: 24576 0x401212F: _dl_load_cache_lookup (dl-cache.c:411)
+     n1: 24576 0x4007FCB: _dl_map_object (dl-load.c:2135)
+      n1: 24576 0x400259B: openaux (dl-deps.c:64)
+       n1: 24576 0x400133B: _dl_catch_exception (dl-catch.c:237)
+        n1: 24576 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+         n1: 24576 0x4018153: dl_main (rtld.c:1965)
+          n1: 24576 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+           n1: 24576 0x4016B93: _dl_start_final (rtld.c:494)
+            n1: 24576 0x4016B93: _dl_start (rtld.c:581)
+             n0: 24576 0x401AA53: (below main) (dl-start.S:30)
+   n0: 16384 in 2 places, all below massif's threshold (1.00%)
+ n0: 634880 0x0: ???
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=23
+#-----------
+time=20964
+mem_heap_B=1409024
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=24
+#-----------
+time=20991
+mem_heap_B=1347584
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=25
+#-----------
+time=21082
+mem_heap_B=1355776
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=24863
+mem_heap_B=3248128
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=27
+#-----------
+time=24891
+mem_heap_B=5074944
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=28
+#-----------
+time=24915
+mem_heap_B=5074944
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n3: 5074944 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n1: 4440064 0x401B534: __mmap64 (mmap64.c:58)
+  n3: 4440064 0x401B534: mmap (mmap64.c:46)
+   n1: 2228224 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 2228224 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2228224 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2228224 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2093056 0x400259B: openaux (dl-deps.c:64)
+        n1: 2093056 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2093056 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2093056 0x4018153: dl_main (rtld.c:1965)
+           n1: 2093056 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2093056 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2093056 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2093056 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 2162688 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 2162688 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n0: 49152 in 3 places, all below massif's threshold (1.00%)
+ n0: 634880 0x0: ???
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=29
+#-----------
+time=24915
+mem_heap_B=5070848
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=30
+#-----------
+time=24942
+mem_heap_B=5009408
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=31
+#-----------
+time=25017
+mem_heap_B=5029888
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=32
+#-----------
+time=25253
+mem_heap_B=5079040
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=33
+#-----------
+time=34723
+mem_heap_B=5087232
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=34
+#-----------
+time=161206
+mem_heap_B=5083136
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=35
+#-----------
+time=165781
+mem_heap_B=5197824
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=36
+#-----------
+time=250119
+mem_heap_B=5218304
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=37
+#-----------
+time=253555
+mem_heap_B=6000640
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=38
+#-----------
+time=254029
+mem_heap_B=6782976
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n5: 6782976 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n1: 4427776 0x401B534: __mmap64 (mmap64.c:58)
+  n3: 4427776 0x401B534: mmap (mmap64.c:46)
+   n1: 2162688 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 2162688 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 2162688 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 2162688 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n0: 102400 in 4 places, all below massif's threshold (1.00%)
+ n1: 1585152 0x49A7284: __mmap64 (mmap64.c:58)
+  n2: 1585152 0x49A7284: mmap (mmap64.c:46)
+   n1: 1564672 0x4953A1B: sysmalloc_mmap.isra.0 (malloc.c:2421)
+    n1: 1564672 0x4954827: sysmalloc (malloc.c:2576)
+     n2: 1564672 0x4955B8B: _int_malloc (malloc.c:4481)
+      n1: 782336 0x49567CB: malloc (malloc.c:3328)
+       n1: 782336 0x1121E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 782336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 782336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n0: 782336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 782336 0x4957B57: calloc (malloc.c:3754)
+       n1: 782336 0x11217F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 782336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 782336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n0: 782336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+   n0: 20480 in 1 place, below massif's threshold (1.00%)
+ n0: 634880 0x0: ???
+ n1: 135168 0x49A3344: brk (brk.c:37)
+  n1: 135168 0x49A8E37: sbrk (sbrk.c:74)
+   n1: 135168 0x4953B7B: __glibc_morecore (morecore.c:29)
+    n1: 135168 0x4954B13: sysmalloc (malloc.c:2709)
+     n1: 135168 0x4955B8B: _int_malloc (malloc.c:4481)
+      n1: 135168 0x4955CF3: tcache_init.part.0 (malloc.c:3252)
+       n1: 135168 0x4956727: tcache_init (malloc.c:3248)
+        n1: 135168 0x4956727: malloc (malloc.c:3313)
+         n1: 135168 0x492FC87: __fopen_internal (iofopen.c:65)
+          n1: 135168 0x4946BE7: pthread_getattr_np@@GLIBC_2.32 (pthread_getattr_np.c:85)
+           n1: 135168 0x1141DF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=39
+#-----------
+time=351824
+mem_heap_B=6782976
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n5: 6782976 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n1: 4427776 0x401B534: __mmap64 (mmap64.c:58)
+  n3: 4427776 0x401B534: mmap (mmap64.c:46)
+   n1: 2162688 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 2162688 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 2162688 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 2162688 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n0: 102400 in 4 places, all below massif's threshold (1.00%)
+ n1: 1585152 0x49A7284: __mmap64 (mmap64.c:58)
+  n2: 1585152 0x49A7284: mmap (mmap64.c:46)
+   n1: 1564672 0x4953A1B: sysmalloc_mmap.isra.0 (malloc.c:2421)
+    n1: 1564672 0x4954827: sysmalloc (malloc.c:2576)
+     n2: 1564672 0x4955B8B: _int_malloc (malloc.c:4481)
+      n1: 782336 0x49567CB: malloc (malloc.c:3328)
+       n1: 782336 0x1121E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 782336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 782336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n0: 782336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 782336 0x4957B57: calloc (malloc.c:3754)
+       n1: 782336 0x11217F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 782336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 782336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n0: 782336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+   n0: 20480 in 1 place, below massif's threshold (1.00%)
+ n0: 634880 0x0: ???
+ n1: 135168 0x49A3344: brk (brk.c:37)
+  n1: 135168 0x49A8E37: sbrk (sbrk.c:74)
+   n1: 135168 0x4953B7B: __glibc_morecore (morecore.c:29)
+    n1: 135168 0x4954B13: sysmalloc (malloc.c:2709)
+     n1: 135168 0x4955B8B: _int_malloc (malloc.c:4481)
+      n1: 135168 0x4955CF3: tcache_init.part.0 (malloc.c:3252)
+       n1: 135168 0x4956727: tcache_init (malloc.c:3248)
+        n1: 135168 0x4956727: malloc (malloc.c:3313)
+         n1: 135168 0x492FC87: __fopen_internal (iofopen.c:65)
+          n1: 135168 0x4946BE7: pthread_getattr_np@@GLIBC_2.32 (pthread_getattr_np.c:85)
+           n1: 135168 0x1141DF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=40
+#-----------
+time=351824
+mem_heap_B=6778880
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=41
+#-----------
+time=21554568
+mem_heap_B=6135808
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=42
+#-----------
+time=51245256
+mem_heap_B=6270976
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=43
+#-----------
+time=82493971
+mem_heap_B=6406144
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=113087347
+mem_heap_B=6541312
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=144255964
+mem_heap_B=6676480
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=46
+#-----------
+time=176477895
+mem_heap_B=6811648
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=47
+#-----------
+time=208814728
+mem_heap_B=6946816
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=48
+#-----------
+time=236839364
+mem_heap_B=7081984
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=49
+#-----------
+time=270450554
+mem_heap_B=7217152
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n5: 7217152 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n1: 4427776 0x401B534: __mmap64 (mmap64.c:58)
+  n3: 4427776 0x401B534: mmap (mmap64.c:46)
+   n1: 2162688 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 2162688 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 2162688 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 2162688 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n0: 102400 in 4 places, all below massif's threshold (1.00%)
+ n1: 1351680 0x49A3344: brk (brk.c:37)
+  n1: 1351680 0x49A8E37: sbrk (sbrk.c:74)
+   n1: 1351680 0x4953B7B: __glibc_morecore (morecore.c:29)
+    n1: 1351680 0x4954B13: sysmalloc (malloc.c:2709)
+     n2: 1351680 0x4955B8B: _int_malloc (malloc.c:4481)
+      n4: 1216512 0x49567CB: malloc (malloc.c:3328)
+       n2: 675840 0x11B8C3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 405504 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 405504 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 405504 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 405504 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 405504 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 270336 0x116523: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 270336 0x11B787: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x11B85F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x11E6E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x11B9EB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 135168 0x4955CF3: tcache_init.part.0 (malloc.c:3252)
+       n1: 135168 0x4956727: tcache_init (malloc.c:3248)
+        n1: 135168 0x4956727: malloc (malloc.c:3313)
+         n1: 135168 0x492FC87: __fopen_internal (iofopen.c:65)
+          n1: 135168 0x4946BE7: pthread_getattr_np@@GLIBC_2.32 (pthread_getattr_np.c:85)
+           n1: 135168 0x1141DF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+ n1: 802816 0x49A7284: __mmap64 (mmap64.c:58)
+  n2: 802816 0x49A7284: mmap (mmap64.c:46)
+   n1: 782336 0x4953A1B: sysmalloc_mmap.isra.0 (malloc.c:2421)
+    n1: 782336 0x4954827: sysmalloc (malloc.c:2576)
+     n2: 782336 0x4955B8B: _int_malloc (malloc.c:4481)
+      n1: 782336 0x49567CB: malloc (malloc.c:3328)
+       n1: 782336 0x1121E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 782336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 782336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n0: 782336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 20480 in 1 place, below massif's threshold (1.00%)
+ n0: 634880 0x0: ???
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=50
+#-----------
+time=300208692
+mem_heap_B=7352320
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=51
+#-----------
+time=330302732
+mem_heap_B=7487488
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=52
+#-----------
+time=360665895
+mem_heap_B=7622656
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=53
+#-----------
+time=392690620
+mem_heap_B=7757824
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=54
+#-----------
+time=424849424
+mem_heap_B=7892992
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=55
+#-----------
+time=462756956
+mem_heap_B=8028160
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=56
+#-----------
+time=497224787
+mem_heap_B=8163328
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=57
+#-----------
+time=529914717
+mem_heap_B=8298496
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=58
+#-----------
+time=561348260
+mem_heap_B=8433664
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=59
+#-----------
+time=592880993
+mem_heap_B=8568832
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n5: 8568832 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n1: 4427776 0x401B534: __mmap64 (mmap64.c:58)
+  n3: 4427776 0x401B534: mmap (mmap64.c:46)
+   n1: 2162688 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 2162688 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 2162688 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 2162688 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n0: 102400 in 4 places, all below massif's threshold (1.00%)
+ n1: 2703360 0x49A3344: brk (brk.c:37)
+  n1: 2703360 0x49A8E37: sbrk (sbrk.c:74)
+   n1: 2703360 0x4953B7B: __glibc_morecore (morecore.c:29)
+    n1: 2703360 0x4954B13: sysmalloc (malloc.c:2709)
+     n2: 2703360 0x4955B8B: _int_malloc (malloc.c:4481)
+      n4: 2568192 0x49567CB: malloc (malloc.c:3328)
+       n2: 1486848 0x11B8C3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 1081344 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 1081344 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 1081344 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 1081344 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 1081344 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 405504 0x116523: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 405504 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 405504 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 405504 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 405504 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 540672 0x11B787: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 540672 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 540672 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 540672 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 540672 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 540672 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 405504 0x11E6E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x11B9EB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 135168 0x11BAE7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x116523: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x11B85F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 135168 0x4955CF3: tcache_init.part.0 (malloc.c:3252)
+       n1: 135168 0x4956727: tcache_init (malloc.c:3248)
+        n1: 135168 0x4956727: malloc (malloc.c:3313)
+         n1: 135168 0x492FC87: __fopen_internal (iofopen.c:65)
+          n1: 135168 0x4946BE7: pthread_getattr_np@@GLIBC_2.32 (pthread_getattr_np.c:85)
+           n1: 135168 0x1141DF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+ n1: 802816 0x49A7284: __mmap64 (mmap64.c:58)
+  n2: 802816 0x49A7284: mmap (mmap64.c:46)
+   n1: 782336 0x4953A1B: sysmalloc_mmap.isra.0 (malloc.c:2421)
+    n1: 782336 0x4954827: sysmalloc (malloc.c:2576)
+     n2: 782336 0x4955B8B: _int_malloc (malloc.c:4481)
+      n1: 782336 0x49567CB: malloc (malloc.c:3328)
+       n1: 782336 0x1121E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 782336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 782336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n0: 782336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 20480 in 1 place, below massif's threshold (1.00%)
+ n0: 634880 0x0: ???
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=60
+#-----------
+time=622031590
+mem_heap_B=8704000
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=61
+#-----------
+time=651128432
+mem_heap_B=8839168
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=62
+#-----------
+time=681052085
+mem_heap_B=8974336
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=63
+#-----------
+time=711500059
+mem_heap_B=9109504
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=64
+#-----------
+time=741932259
+mem_heap_B=9244672
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=65
+#-----------
+time=779818071
+mem_heap_B=9379840
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=66
+#-----------
+time=806767856
+mem_heap_B=9519104
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=67
+#-----------
+time=861505476
+mem_heap_B=9654272
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=68
+#-----------
+time=918167448
+mem_heap_B=9789440
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=69
+#-----------
+time=976042924
+mem_heap_B=9924608
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n5: 9924608 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n1: 4427776 0x401B534: __mmap64 (mmap64.c:58)
+  n3: 4427776 0x401B534: mmap (mmap64.c:46)
+   n1: 2162688 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 2162688 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 2162688 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 2162688 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n0: 102400 in 4 places, all below massif's threshold (1.00%)
+ n1: 4059136 0x49A3344: brk (brk.c:37)
+  n1: 4059136 0x49A8E37: sbrk (sbrk.c:74)
+   n1: 4059136 0x4953B7B: __glibc_morecore (morecore.c:29)
+    n1: 4059136 0x4954B13: sysmalloc (malloc.c:2709)
+     n3: 4059136 0x4955B8B: _int_malloc (malloc.c:4481)
+      n7: 3653632 0x49567CB: malloc (malloc.c:3328)
+       n2: 1757184 0x11B8C3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 1351680 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 1351680 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 1351680 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 1351680 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 1351680 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 405504 0x116523: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 405504 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 405504 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 405504 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 405504 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 811008 0x11B787: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 811008 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 811008 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 811008 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 811008 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 811008 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 540672 0x11E6E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x11B9EB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n2: 270336 0x11BAE7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+         n1: 135168 0x116523: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 139264 0x116BFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 139264 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 139264 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 139264 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n0: 139264 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x119EDB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x11B803: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x11B85F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 270336 0x4957B57: calloc (malloc.c:3754)
+       n1: 270336 0x11A677: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 135168 0x4955CF3: tcache_init.part.0 (malloc.c:3252)
+       n1: 135168 0x4956727: tcache_init (malloc.c:3248)
+        n1: 135168 0x4956727: malloc (malloc.c:3313)
+         n1: 135168 0x492FC87: __fopen_internal (iofopen.c:65)
+          n1: 135168 0x4946BE7: pthread_getattr_np@@GLIBC_2.32 (pthread_getattr_np.c:85)
+           n1: 135168 0x1141DF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+ n1: 802816 0x49A7284: __mmap64 (mmap64.c:58)
+  n2: 802816 0x49A7284: mmap (mmap64.c:46)
+   n1: 782336 0x4953A1B: sysmalloc_mmap.isra.0 (malloc.c:2421)
+    n1: 782336 0x4954827: sysmalloc (malloc.c:2576)
+     n2: 782336 0x4955B8B: _int_malloc (malloc.c:4481)
+      n1: 782336 0x49567CB: malloc (malloc.c:3328)
+       n1: 782336 0x1121E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 782336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 782336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n0: 782336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 20480 in 1 place, below massif's threshold (1.00%)
+ n0: 634880 0x0: ???
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=70
+#-----------
+time=1034353293
+mem_heap_B=10059776
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=71
+#-----------
+time=1075065229
+mem_heap_B=10194944
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=72
+#-----------
+time=1118874237
+mem_heap_B=10330112
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=73
+#-----------
+time=1190843417
+mem_heap_B=10465280
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=74
+#-----------
+time=1266464765
+mem_heap_B=10600448
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=75
+#-----------
+time=1328835377
+mem_heap_B=10735616
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=76
+#-----------
+time=1398659743
+mem_heap_B=10870784
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=77
+#-----------
+time=1436083777
+mem_heap_B=11005952
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=78
+#-----------
+time=1503177181
+mem_heap_B=11141120
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=79
+#-----------
+time=1547034181
+mem_heap_B=11276288
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=detailed
+n5: 11276288 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n1: 5410816 0x49A3344: brk (brk.c:37)
+  n1: 5410816 0x49A8E37: sbrk (sbrk.c:74)
+   n1: 5410816 0x4953B7B: __glibc_morecore (morecore.c:29)
+    n1: 5410816 0x4954B13: sysmalloc (malloc.c:2709)
+     n3: 5410816 0x4955B8B: _int_malloc (malloc.c:4481)
+      n8: 5005312 0x49567CB: malloc (malloc.c:3328)
+       n4: 2297856 0x11B8C3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 1351680 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 1351680 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 1351680 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 1351680 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 1351680 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 405504 0x116523: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 405504 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 405504 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 405504 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 405504 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n2: 270336 0x119CFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+         n1: 135168 0x11D683: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 270336 0x119D47: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x11D683: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 946176 0x11B787: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 811008 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 811008 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 811008 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 811008 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 811008 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 135168 0x119D47: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x11D683: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 540672 0x119EDB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 270336 0x11D683: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 540672 0x11E6E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x11B9EB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n2: 270336 0x11BAE7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+         n1: 135168 0x116523: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 270336 0x11B803: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 135168 0x119D47: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 139264 0x116BFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 139264 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 139264 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 139264 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n0: 139264 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x114DCB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x119B7B: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x11B85F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 270336 0x4957B57: calloc (malloc.c:3754)
+       n1: 270336 0x11A677: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 135168 0x4955CF3: tcache_init.part.0 (malloc.c:3252)
+       n1: 135168 0x4956727: tcache_init (malloc.c:3248)
+        n1: 135168 0x4956727: malloc (malloc.c:3313)
+         n1: 135168 0x492FC87: __fopen_internal (iofopen.c:65)
+          n1: 135168 0x4946BE7: pthread_getattr_np@@GLIBC_2.32 (pthread_getattr_np.c:85)
+           n1: 135168 0x1141DF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+ n1: 4427776 0x401B534: __mmap64 (mmap64.c:58)
+  n3: 4427776 0x401B534: mmap (mmap64.c:46)
+   n1: 2162688 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 2162688 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 2162688 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 2162688 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n0: 102400 in 4 places, all below massif's threshold (1.00%)
+ n1: 802816 0x49A7284: __mmap64 (mmap64.c:58)
+  n2: 802816 0x49A7284: mmap (mmap64.c:46)
+   n1: 782336 0x4953A1B: sysmalloc_mmap.isra.0 (malloc.c:2421)
+    n1: 782336 0x4954827: sysmalloc (malloc.c:2576)
+     n2: 782336 0x4955B8B: _int_malloc (malloc.c:4481)
+      n1: 782336 0x49567CB: malloc (malloc.c:3328)
+       n1: 782336 0x1121E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 782336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 782336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n0: 782336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 20480 in 1 place, below massif's threshold (1.00%)
+ n0: 634880 0x0: ???
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=80
+#-----------
+time=1582033386
+mem_heap_B=11411456
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=81
+#-----------
+time=1619967909
+mem_heap_B=11546624
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=82
+#-----------
+time=1657277926
+mem_heap_B=11681792
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=83
+#-----------
+time=1699344372
+mem_heap_B=11816960
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=84
+#-----------
+time=1737802275
+mem_heap_B=11952128
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=85
+#-----------
+time=1767544875
+mem_heap_B=11952128
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=peak
+n5: 11952128 (page allocation syscalls) mmap/mremap/brk, --alloc-fns, etc.
+ n1: 6086656 0x49A3344: brk (brk.c:37)
+  n1: 6086656 0x49A8E37: sbrk (sbrk.c:74)
+   n1: 6086656 0x4953B7B: __glibc_morecore (morecore.c:29)
+    n1: 6086656 0x4954B13: sysmalloc (malloc.c:2709)
+     n3: 6086656 0x4955B8B: _int_malloc (malloc.c:4481)
+      n8: 5681152 0x49567CB: malloc (malloc.c:3328)
+       n4: 2838528 0x11B8C3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 1351680 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 1351680 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 1351680 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 1351680 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 1351680 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 811008 0x119D47: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 811008 0x11D683: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 811008 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 811008 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 811008 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 811008 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 811008 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 811008 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 405504 0x116523: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 405504 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 405504 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 405504 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 405504 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n2: 270336 0x119CFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+         n1: 135168 0x11D683: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 1081344 0x11B787: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 811008 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 811008 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 811008 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 811008 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 811008 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 270336 0x119D47: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x11D683: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 540672 0x119EDB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 270336 0x11D683: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 540672 0x11E6E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x11B9EB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n2: 270336 0x11BAE7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+         n1: 135168 0x116523: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n2: 270336 0x11B803: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+        n1: 135168 0x119D47: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 139264 0x116BFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 139264 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 139264 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 139264 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n0: 139264 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x114DCB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x119B7B: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 135168 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+               n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+       n1: 135168 0x11B85F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 135168 0x1164EF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 135168 0x112AFB: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 135168 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 135168 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 270336 0x4957B57: calloc (malloc.c:3754)
+       n1: 270336 0x11A677: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 270336 0x11CF53: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 270336 0x11AAE3: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n1: 270336 0x116E8F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+           n1: 270336 0x113407: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n1: 270336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+             n1: 270336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+              n0: 270336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n1: 135168 0x4955CF3: tcache_init.part.0 (malloc.c:3252)
+       n1: 135168 0x4956727: tcache_init (malloc.c:3248)
+        n1: 135168 0x4956727: malloc (malloc.c:3313)
+         n1: 135168 0x492FC87: __fopen_internal (iofopen.c:65)
+          n1: 135168 0x4946BE7: pthread_getattr_np@@GLIBC_2.32 (pthread_getattr_np.c:85)
+           n1: 135168 0x1141DF: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+            n0: 135168 0x48E84C3: (below main) (libc_start_call_main.h:58)
+ n1: 4427776 0x401B534: __mmap64 (mmap64.c:58)
+  n3: 4427776 0x401B534: mmap (mmap64.c:46)
+   n1: 2162688 0x40077A7: _dl_map_segment (dl-map-segments.h:37)
+    n1: 2162688 0x40077A7: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077A7: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n1: 2162688 0x40077E3: _dl_map_segment (dl-map-segments.h:45)
+    n1: 2162688 0x40077E3: _dl_map_segments (dl-map-segments.h:101)
+     n1: 2162688 0x40077E3: _dl_map_object_from_fd (dl-load.c:1258)
+      n2: 2162688 0x4007E2F: _dl_map_object (dl-load.c:2268)
+       n1: 2027520 0x400259B: openaux (dl-deps.c:64)
+        n1: 2027520 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 2027520 0x4002AF3: _dl_map_object_deps (dl-deps.c:232)
+          n1: 2027520 0x4018153: dl_main (rtld.c:1965)
+           n1: 2027520 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+            n1: 2027520 0x4016B93: _dl_start_final (rtld.c:494)
+             n1: 2027520 0x4016B93: _dl_start (rtld.c:581)
+              n0: 2027520 0x401AA53: (below main) (dl-start.S:30)
+       n1: 135168 0x4015DFF: map_doit (rtld.c:644)
+        n1: 135168 0x400133B: _dl_catch_exception (dl-catch.c:237)
+         n1: 135168 0x400145B: _dl_catch_error (dl-catch.c:256)
+          n1: 135168 0x4015F13: do_preload (rtld.c:816)
+           n1: 135168 0x4016D93: handle_preload_list (rtld.c:892)
+            n1: 135168 0x40196CF: dl_main (rtld.c:1842)
+             n1: 135168 0x401572F: _dl_sysdep_start (dl-sysdep.c:140)
+              n1: 135168 0x4016B93: _dl_start_final (rtld.c:494)
+               n1: 135168 0x4016B93: _dl_start (rtld.c:581)
+                n0: 135168 0x401AA53: (below main) (dl-start.S:30)
+   n0: 102400 in 4 places, all below massif's threshold (1.00%)
+ n1: 802816 0x49A7284: __mmap64 (mmap64.c:58)
+  n2: 802816 0x49A7284: mmap (mmap64.c:46)
+   n1: 782336 0x4953A1B: sysmalloc_mmap.isra.0 (malloc.c:2421)
+    n1: 782336 0x4954827: sysmalloc (malloc.c:2576)
+     n2: 782336 0x4955B8B: _int_malloc (malloc.c:4481)
+      n1: 782336 0x49567CB: malloc (malloc.c:3328)
+       n1: 782336 0x1121E7: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+        n1: 782336 0x11179F: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+         n1: 782336 0x114417: ??? (in /home/xerxes2.linux/bwt-rle-rs/target/release/bwt-rle-rs)
+          n0: 782336 0x48E84C3: (below main) (libc_start_call_main.h:58)
+      n0: 0 in 1 place, below massif's threshold (1.00%)
+   n0: 20480 in 1 place, below massif's threshold (1.00%)
+ n0: 634880 0x0: ???
+ n0: 0 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=86
+#-----------
+time=1767544875
+mem_heap_B=11948032
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=87
+#-----------
+time=1775241444
+mem_heap_B=11165696
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
