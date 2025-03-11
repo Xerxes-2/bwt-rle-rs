@@ -1,4 +1,4 @@
-use bwt_rle_rs::{index::gen_index, Context, CHUNK_SIZE, I32_SIZE};
+use bwt_rle_rs::{CHUNK_SIZE, Context, I32_SIZE, index::gen_index};
 use std::{
     fs::{File, OpenOptions},
     io::Read,
@@ -11,7 +11,7 @@ fn main() {
     }
     let rlb_name = &args[1];
     let index_name = &args[2];
-    let mut rlb = OpenOptions::new().read(true).open(rlb_name).unwrap();
+    let rlb = OpenOptions::new().read(true).open(rlb_name).unwrap();
     let rlb_size = rlb.metadata().unwrap().len();
     let checkpoints = rlb_size as usize / CHUNK_SIZE;
     let positions: Vec<i32>;
@@ -28,14 +28,14 @@ fn main() {
                 .collect();
         } else {
             // Create index file
-            let mut index_file = OpenOptions::new()
+            let index_file = OpenOptions::new()
                 .read(true)
                 .write(true)
                 .create(true)
                 .truncate(true)
                 .open(index_name)
                 .unwrap();
-            positions = gen_index(&mut rlb, &mut index_file, checkpoints);
+            positions = gen_index(&rlb, &index_file, checkpoints);
             index = Some(index_file);
         }
     } else {

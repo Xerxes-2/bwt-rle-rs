@@ -1,4 +1,7 @@
-use std::{fs::File, io::Read};
+use std::{
+    fs::File,
+    io::{Read, Result},
+};
 
 use index::gen_c_table;
 use search::Cache;
@@ -12,7 +15,7 @@ pub const CHUNK_SIZE: usize = OOC_TABLE_SIZE + I32_SIZE;
 pub const MAX_CACHE: usize = 250000;
 
 pub trait TryReadExact: Read {
-    fn try_read_exact(mut self, mut buf: &mut [u8]) -> std::io::Result<usize>
+    fn try_read_exact(mut self, mut buf: &mut [u8]) -> Result<usize>
     where
         Self: Sized,
     {
@@ -31,7 +34,57 @@ pub trait TryReadExact: Read {
     }
 }
 
+pub trait MyReadAt: Read {
+    fn my_read_at(&self, buf: &mut [u8], offset: u64) -> Result<usize>;
+    fn try_read_exact_at(&self, mut buf: &mut [u8], mut offset: u64) -> Result<usize>
+    where
+        Self: Sized,
+    {
+        let mut read = 0;
+        while !buf.is_empty() {
+            match self.my_read_at(buf, offset) {
+                Ok(0) => break,
+                Ok(n) => {
+                    buf = &mut buf[n..];
+                    read += n;
+                    offset += n as u64;
+                }
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(read)
+    }
+    fn my_read_exact_at(&self, buf: &mut [u8], offset: u64) -> Result<()>;
+}
+
 impl TryReadExact for &File {}
+
+impl MyReadAt for &File {
+    fn my_read_at(&self, buf: &mut [u8], offset: u64) -> Result<usize> {
+        #[cfg(target_family = "windows")]
+        {
+            use std::os::windows::fs::FileExt;
+            self.seek_read(buf, offset)
+        }
+        #[cfg(target_family = "unix")]
+        {
+            use std::os::unix::fs::FileExt;
+            self.read_at(buf, offset)
+        }
+    }
+
+    fn my_read_exact_at(&self, buf: &mut [u8], offset: u64) -> Result<()> {
+        #[cfg(target_family = "windows")]
+        {
+            self.try_seek_read_exact(buf, offset).map(|_| ())
+        }
+        #[cfg(target_family = "unix")]
+        {
+            use std::os::unix::fs::FileExt;
+            self.read_exact_at(buf, offset)
+        }
+    }
+}
 
 pub struct Context {
     rlb: File,                     // rlb file
@@ -45,8 +98,8 @@ pub struct Context {
 }
 
 impl Context {
-    pub fn new(mut rlb: File, index: Option<File>, cps: usize, positions: Vec<i32>) -> Self {
-        let c_table = gen_c_table(&mut rlb, index.as_ref(), cps);
+    pub fn new(rlb: File, index: Option<File>, cps: usize, positions: Vec<i32>) -> Self {
+        let c_table = gen_c_table(&rlb, index.as_ref(), cps);
         Self {
             rlb,
             index,

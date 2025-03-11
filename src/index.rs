@@ -3,7 +3,7 @@ use std::{
     io::{Read, Seek, SeekFrom, Write},
 };
 
-use crate::{ALPHABETS, CHUNK_SIZE, Context, I32_SIZE, OOC_TABLE_SIZE, TryReadExact};
+use crate::{ALPHABETS, CHUNK_SIZE, Context, I32_SIZE, MyReadAt, OOC_TABLE_SIZE, TryReadExact};
 
 pub const fn map_char(c: u8) -> usize {
     match c {
@@ -201,8 +201,7 @@ impl Context {
         } else {
             &mut buf
         };
-        (&self.rlb).seek(SeekFrom::Start(pos_rlb as u64)).unwrap();
-        let n = self.rlb.try_read_exact(buf).unwrap();
+        let n = (&self.rlb).try_read_exact_at(buf, pos_rlb as u64).unwrap();
         let mut iter = buf.iter_mut().take(n).skip_while(|x| x.is_rl_tail());
         let Some(&mut b) = iter.next() else {
             unreachable!("Empty run-length")
@@ -230,11 +229,10 @@ impl Context {
         match (self.index.as_ref(), nearest_cp) {
             (None, _) => Checkpoint::default(),
             (_, 0) => Checkpoint::default(),
-            (Some(mut index), _) => {
+            (Some(index), _) => {
                 let read_pos = self.cps * I32_SIZE + (nearest_cp - 1) * OOC_TABLE_SIZE;
                 let mut buf = [0u8; OOC_TABLE_SIZE];
-                index.seek(SeekFrom::Start(read_pos as u64)).unwrap();
-                index.read_exact(&mut buf).unwrap();
+                index.my_read_exact_at(&mut buf, read_pos as u64).unwrap();
                 let mut occ = [0i32; ALPHABETS];
                 buf.chunks_exact(I32_SIZE)
                     .enumerate()
@@ -252,14 +250,13 @@ impl Context {
         let cp = self.read_cp(nearest_cp);
         let mut occ = cp.occ;
         let mut buf = [0u8; CHUNK_SIZE + 4];
-        
+
         let buf = if ((pos - pos_bwt + 9) as usize) < buf.len() {
             &mut buf[..(pos - pos_bwt + 9) as usize]
         } else {
             &mut buf
         };
-        (&self.rlb).seek(SeekFrom::Start(pos_rlb as u64)).unwrap();
-        let n = self.rlb.try_read_exact(buf).unwrap();
+        let n = (&self.rlb).try_read_exact_at(buf, pos_rlb as u64).unwrap();
         let mut iter = buf.iter_mut().take(n).skip_while(|x| x.is_rl_tail());
         let Some(&mut b) = iter.next() else {
             unreachable!("Empty run-length")
