@@ -1,6 +1,9 @@
-use std::{collections::BTreeSet, ops::Range, sync::RwLock};
-
 use futures::prelude::*;
+use std::{
+    collections::BTreeSet,
+    ops::Range,
+    sync::{Arc, RwLock},
+};
 
 use crate::{
     Context, MAX_CACHE,
@@ -182,25 +185,32 @@ impl Context {
 
     pub async fn search(&mut self, pattern: &[u8]) {
         self.get_metadata().await;
+        let num_concurrent = 128;
         let range = self.search_pattern(pattern).await;
         let ids = stream::iter(range)
             .map(async |x| self.search_id_in_pos(x).await + 1)
-            .buffer_unordered(16)
+            .buffer_unordered(num_concurrent)
             .collect::<Vec<_>>();
         let mut ids = ids.await;
         ids.sort_unstable();
         ids.dedup();
-        let mut buf = [0u8; MAX_RECORD_LEN];
         let upper = self.min_id + self.recs;
-        for id in ids {
-            let start = if id == upper {
-                self.search_pos_of_id(self.min_id).await
-            } else {
-                self.search_pos_of_id(id).await
-            };
-            let str = self.rebuild_record(start, &mut buf).await;
-            println!("[{}]{}", id - 1, str);
-        }
+        let ctx = Arc::new(self);
+        stream::iter(ids)
+            .map(|x| (x, ctx.clone()))
+            .map(|(x, ctx)| async move {
+                let start = if x == upper {
+                    ctx.search_pos_of_id(ctx.min_id).await
+                } else {
+                    ctx.search_pos_of_id(x).await
+                };
+                let mut buf = [0u8; MAX_RECORD_LEN];
+                let str = ctx.rebuild_record(start, &mut buf).await;
+                println!("[{}]{}", x - 1, str);
+            })
+            .buffered(num_concurrent)
+            .collect::<Vec<_>>()
+            .await;
     }
 
     async fn rebuild_record<'a>(&self, mut pos: i32, buf: &'a mut [u8]) -> &'a str {
