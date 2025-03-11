@@ -1,7 +1,7 @@
-use std::{collections::BTreeSet, ops::Range};
+use std::{collections::BTreeSet, ops::Range, thread::Thread};
 
 use crate::{
-    CACHE_SIZE, Context,
+    MAX_CACHE, Context,
     index::{Mapper, RunLength, map_char},
 };
 
@@ -102,7 +102,7 @@ impl Cache {
     }
 
     fn insert(&mut self, rl: CacheRL) {
-        if self.inner.len() < CACHE_SIZE {
+        if self.inner.len() < MAX_CACHE {
             self.inner.insert(rl);
         }
     }
@@ -126,7 +126,7 @@ impl Context {
         }
         index_start..index_end
     }
-    fn find_metadata(&mut self) {
+    fn get_metadata(&mut self) {
         let map_lb = map_char(b'[');
         self.recs = self.c_table[map_lb + 1] - self.c_table[map_lb];
         let mut l = 0;
@@ -138,8 +138,8 @@ impl Context {
             let mid = (l + r) / 2;
             let mut pattern = format!("[{}]", mid).into_bytes();
             pattern.reverse();
-            let Range { start, end } = self.search_pattern(&pattern);
-            if start == end {
+            let range = self.search_pattern(&pattern);
+            if range.is_empty() {
                 l = mid + 1;
             } else {
                 r = mid;
@@ -193,10 +193,10 @@ impl Context {
     }
 
     pub fn search(&mut self, pattern: &[u8]) {
-        self.find_metadata();
+        self.get_metadata();
         let range = self.search_pattern(pattern);
-        let matches = range.len() as i32;
-        let mut ids = Vec::with_capacity(matches as usize);
+        let matches = range.len();
+        let mut ids = Vec::with_capacity(matches);
         for i in range {
             let id = self.search_id_in_pos(i) + 1;
             ids.push(id);
