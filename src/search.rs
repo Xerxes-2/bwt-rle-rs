@@ -1,4 +1,6 @@
-use std::{collections::BTreeSet, ops::Range};
+use std::{collections::BTreeSet, ops::Range, sync::RwLock};
+
+use futures::prelude::*;
 
 use crate::{
     Context, MAX_CACHE,
@@ -69,15 +71,14 @@ impl From<RunLength> for CacheRL {
 
 #[derive(Default)]
 pub struct Cache {
-    hit: usize,
-    miss: usize,
-    inner: BTreeSet<CacheRL>,
+    inner: RwLock<BTreeSet<CacheRL>>,
 }
 
 impl Cache {
-    fn search(&mut self, pos: i32) -> Option<CacheRL> {
-        let rl = self
-            .inner
+    fn search(&self, pos: i32) -> Option<CacheRL> {
+        self.inner
+            .read()
+            .unwrap()
             .range(
                 ..=CacheRL {
                     pos,
@@ -89,45 +90,35 @@ impl Cache {
             .map(|mut rl| {
                 rl.rank = rl.rank + pos - rl.pos;
                 rl
-            });
-        if let Some(_) = rl {
-            self.hit += 1;
-        } else {
-            self.miss += 1;
-        }
-        rl
+            })
     }
 
-    fn insert(&mut self, rl: CacheRL) {
-        if self.inner.len() < MAX_CACHE {
-            self.inner.insert(rl);
+    fn insert(&self, rl: CacheRL) {
+        if self.inner.read().unwrap().len() < MAX_CACHE {
+            self.inner.write().unwrap().insert(rl);
         }
-    }
-
-    pub fn summary(&self) {
-        eprintln!("Cache hit: {}, miss: {}", self.hit, self.miss);
     }
 }
 
 impl Context {
-    fn search_pattern(&self, pattern: &[u8]) -> Range<i32> {
+    async fn search_pattern(&self, pattern: &[u8]) -> Range<i32> {
         let mut index_start = self.c_table[pattern[0].map_char()];
         let mut index_end = self.c_table[pattern[0].map_char() + 1];
         let mut ooc_start;
         let mut ooc_end;
         for &ch in pattern.iter().skip(1) {
-            ooc_start = self.occ_fn(ch, index_start);
-            ooc_end = self.occ_fn(ch, index_end);
+            ooc_start = self.occ_fn(ch, index_start).await;
+            ooc_end = self.occ_fn(ch, index_end).await;
             index_start = self.nth_char_pos(ooc_start, ch);
             index_end = self.nth_char_pos(ooc_end, ch);
         }
         index_start..index_end
     }
-    fn get_metadata(&mut self) {
+    async fn get_metadata(&mut self) {
         let map_lb = b'['.map_char();
         self.recs = self.c_table[map_lb + 1] - self.c_table[map_lb];
         let mut l = 0;
-        let mut r = self.search_id_in_pos(0);
+        let mut r = self.search_id_in_pos(0).await;
         if r >= self.recs {
             l = r - self.recs;
         }
@@ -135,7 +126,7 @@ impl Context {
             let mid = (l + r) / 2;
             let mut pattern = format!("[{}]", mid).into_bytes();
             pattern.reverse();
-            let range = self.search_pattern(&pattern);
+            let range = self.search_pattern(&pattern).await;
             if range.is_empty() {
                 l = mid + 1;
             } else {
@@ -145,16 +136,16 @@ impl Context {
         self.min_id = l;
     }
 
-    fn search_id_in_pos(&mut self, mut pos: i32) -> i32 {
+    async fn search_id_in_pos(&self, mut pos: i32) -> i32 {
         let mut buf = Vec::with_capacity(16);
         let mut id = false;
-        let mut rl = self.cached_decode(pos);
+        let mut rl = self.cached_decode(pos).await;
         loop {
             if rl.ch == b']' {
                 id = true;
             }
             pos = self.nth_char_pos(rl.rank, rl.ch);
-            rl = self.cached_decode(pos);
+            rl = self.cached_decode(pos).await;
             if rl.ch == b'[' {
                 break;
             }
@@ -167,57 +158,59 @@ impl Context {
         str_id.parse().unwrap()
     }
 
-    fn cached_decode(&mut self, pos: i32) -> CacheRL {
+    async fn cached_decode(&self, pos: i32) -> CacheRL {
         if let Some(rl) = self.cache.search(pos) {
             return rl;
         }
-        let rl: CacheRL = self.decode(pos).into();
+        let rl: CacheRL = self.decode(pos).await.into();
         let mut cached_rl = rl;
         cached_rl.rank = rl.rank - pos + rl.pos;
         self.cache.insert(cached_rl);
         rl
     }
 
-    fn search_pos_of_id(&self, id: i32) -> i32 {
+    async fn search_pos_of_id(&self, id: i32) -> i32 {
         let mut pat = format!("[{}", id).into_bytes();
         pat.reverse();
         let mut pos = self.c_table[b']'.map_char()];
-        pat.iter().for_each(|&ch| {
-            let occ = self.occ_fn(ch, pos);
+        for ch in pat {
+            let occ = self.occ_fn(ch, pos).await;
             pos = self.nth_char_pos(occ, ch);
-        });
+        }
         pos
     }
 
-    pub fn search(&mut self, pattern: &[u8]) {
-        self.get_metadata();
-        let range = self.search_pattern(pattern);
-        let mut ids = range
-            .map(|x| self.search_id_in_pos(x) + 1)
+    pub async fn search(&mut self, pattern: &[u8]) {
+        self.get_metadata().await;
+        let range = self.search_pattern(pattern).await;
+        let ids = stream::iter(range)
+            .map(async |x| self.search_id_in_pos(x).await + 1)
+            .buffer_unordered(16)
             .collect::<Vec<_>>();
+        let mut ids = ids.await;
         ids.sort_unstable();
         ids.dedup();
         let mut buf = [0u8; MAX_RECORD_LEN];
         let upper = self.min_id + self.recs;
-        ids.into_iter().for_each(|id| {
+        for id in ids {
             let start = if id == upper {
-                self.search_pos_of_id(self.min_id)
+                self.search_pos_of_id(self.min_id).await
             } else {
-                self.search_pos_of_id(id)
+                self.search_pos_of_id(id).await
             };
-            let str = self.rebuild_record(start, &mut buf);
+            let str = self.rebuild_record(start, &mut buf).await;
             println!("[{}]{}", id - 1, str);
-        });
+        }
     }
 
-    fn rebuild_record<'a>(&mut self, mut pos: i32, buf: &'a mut [u8]) -> &'a str {
-        let mut rl = self.cached_decode(pos);
+    async fn rebuild_record<'a>(&self, mut pos: i32, buf: &'a mut [u8]) -> &'a str {
+        let mut rl = self.cached_decode(pos).await;
         let mut cur = 0;
         while rl.ch != b']' {
             buf[cur] = rl.ch;
             cur += 1;
             pos = self.nth_char_pos(rl.rank, rl.ch);
-            rl = self.cached_decode(pos);
+            rl = self.cached_decode(pos).await;
         }
         buf[..cur].reverse();
         std::str::from_utf8(&buf[..cur]).unwrap()

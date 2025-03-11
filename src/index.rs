@@ -1,9 +1,10 @@
-use std::{
+use compio::{
+    buf::IoBuf,
     fs::File,
-    io::{Read, Seek, SeekFrom, Write},
+    io::{AsyncReadAt, AsyncReadAtExt, AsyncWriteAtExt},
 };
 
-use crate::{ALPHABETS, CHUNK_SIZE, Context, I32_SIZE, MyReadAt, OOC_TABLE_SIZE, TryReadExact};
+use crate::{ALPHABETS, CHUNK_SIZE, Context, I32_SIZE, OOC_TABLE_SIZE};
 
 pub const fn map_char(c: u8) -> usize {
     match c {
@@ -81,17 +82,18 @@ impl RunLength {
     }
 }
 
-pub fn gen_index(mut rlb: &File, mut index: &File, checkpoints: usize) -> Vec<i32> {
-    rlb.rewind().unwrap();
+pub async fn gen_index(rlb: &File, mut index: &File, checkpoints: usize) -> Vec<i32> {
     let mut positions: Vec<i32> = Vec::with_capacity(checkpoints + 1);
     positions.push(0);
     let mut cur_pos = 0;
     let mut occ = [0i32; ALPHABETS];
-    let mut buf = [0u8; CHUNK_SIZE + 4];
-    index
-        .seek(SeekFrom::Start((I32_SIZE * checkpoints) as u64))
-        .unwrap();
-    while let Ok(n) = rlb.try_read_exact(&mut buf) {
+    let mut pos_idx = (I32_SIZE * checkpoints) as u64;
+    loop {
+        let buf = [0u8; CHUNK_SIZE + 4].slice(..);
+        let (n, buf) = rlb
+            .read_at(buf, (positions.len() - 1) as u64 * CHUNK_SIZE as u64)
+            .await
+            .unwrap();
         if n < CHUNK_SIZE {
             break;
         }
@@ -120,40 +122,41 @@ pub fn gen_index(mut rlb: &File, mut index: &File, checkpoints: usize) -> Vec<i3
         let occ = occ
             .into_iter()
             .flat_map(i32::to_le_bytes)
-            .collect::<Vec<_>>();
-        index.write_all(&occ).unwrap();
-        rlb.seek_relative(CHUNK_SIZE as i64 - n as i64).unwrap();
+            .collect::<Vec<_>>()
+            .slice(..);
+        index.write_all_at(occ, pos_idx).await.unwrap();
+        pos_idx += OOC_TABLE_SIZE as u64;
     }
-
-    index.rewind().unwrap();
     let positions_raw = positions
         .iter()
         .skip(1)
         .copied()
         .flat_map(i32::to_le_bytes)
-        .collect::<Vec<_>>();
-    index.write_all(&positions_raw).unwrap();
+        .collect::<Vec<_>>()
+        .slice(..);
+    index.write_all_at(positions_raw, 0).await.unwrap();
     positions
 }
 
-pub fn gen_c_table(
-    mut rlb: &File,
+pub async fn gen_c_table(
+    rlb: &File,
     index: Option<&File>,
     checkpoints: usize,
 ) -> [i32; ALPHABETS + 1] {
     let last_pos = checkpoints * CHUNK_SIZE;
     let mut c_table = [0; ALPHABETS + 1];
-    if let Some(mut index) = index {
-        let mut buf = [0u8; OOC_TABLE_SIZE];
-        index.seek(SeekFrom::End(-(OOC_TABLE_SIZE as i64))).unwrap();
-        index.read_exact(&mut buf).unwrap();
+    if let Some(index) = index {
+        let buf = [0u8; OOC_TABLE_SIZE].slice(..);
+        let pos = checkpoints * I32_SIZE + (checkpoints - 1) * OOC_TABLE_SIZE;
+        let (_, buf) = index.read_exact_at(buf, pos as u64).await.unwrap();
         for (i, b) in buf.chunks_exact(I32_SIZE).enumerate() {
             c_table[i + 1] = i32::from_le_bytes(b.try_into().unwrap());
         }
     }
-    let mut buf = Vec::with_capacity(CHUNK_SIZE);
-    rlb.seek(SeekFrom::Start(last_pos as u64)).unwrap();
-    rlb.read_to_end(&mut buf).unwrap();
+    let (_, buf) = rlb
+        .read_to_end_at(Vec::with_capacity(CHUNK_SIZE), last_pos as u64)
+        .await
+        .unwrap();
     let mut iter = buf.iter().skip_while(|&&x| x.is_rl_tail());
     let Some(&ch) = iter.next() else {
         unreachable!("Empty run-length")
@@ -185,29 +188,29 @@ impl Context {
         self.positions.binary_search(&pos).unwrap_or_else(|x| x - 1)
     }
 
-    pub fn occ_fn(&self, ch: u8, pos: i32) -> i32 {
+    pub async fn occ_fn(&self, ch: u8, pos: i32) -> i32 {
         let nearest_cp = self.find_checkpoint(pos);
         let mut pos_bwt = self.positions[nearest_cp];
         let pos_rlb = nearest_cp * CHUNK_SIZE;
-        let cp = self.read_cp(nearest_cp);
+        let cp = self.read_cp(nearest_cp).await;
         let mut occ = cp.occ;
         if pos_bwt == pos {
             return occ[ch.map_char()];
         }
         // let mut rlb = &self.rlb;
-        let mut buf = [0u8; CHUNK_SIZE + 4];
+        let buf = [0u8; CHUNK_SIZE + 4];
         let buf = if ((pos - pos_bwt + 9) as usize) < buf.len() {
-            &mut buf[..(pos - pos_bwt + 9) as usize]
+            buf.slice(..(pos - pos_bwt + 9) as usize)
         } else {
-            &mut buf
+            buf.slice(..)
         };
-        let n = (&self.rlb).try_read_exact_at(buf, pos_rlb as u64).unwrap();
-        let mut iter = buf.iter_mut().take(n).skip_while(|x| x.is_rl_tail());
-        let Some(&mut b) = iter.next() else {
+        let (n, buf) = self.rlb.read_at(buf, pos_rlb as u64).await.unwrap();
+        let mut iter = buf.iter().take(n).skip_while(|x| x.is_rl_tail());
+        let Some(&b) = iter.next() else {
             unreachable!("Empty run-length")
         };
         let mut rl = RunLength::new(b, 0);
-        for &mut b in iter {
+        for &b in iter {
             if b.is_rl_tail() {
                 rl.extend_byte(b);
             } else {
@@ -225,14 +228,14 @@ impl Context {
         occ[ch.map_char()] + addition
     }
 
-    fn read_cp(&self, nearest_cp: usize) -> Checkpoint {
+    async fn read_cp(&self, nearest_cp: usize) -> Checkpoint {
         match (self.index.as_ref(), nearest_cp) {
             (None, _) => Checkpoint::default(),
             (_, 0) => Checkpoint::default(),
             (Some(index), _) => {
                 let read_pos = self.cps * I32_SIZE + (nearest_cp - 1) * OOC_TABLE_SIZE;
-                let mut buf = [0u8; OOC_TABLE_SIZE];
-                index.my_read_exact_at(&mut buf, read_pos as u64).unwrap();
+                let buf = [0u8; OOC_TABLE_SIZE].slice(..);
+                let (_, buf) = index.read_exact_at(buf, read_pos as u64).await.unwrap();
                 let mut occ = [0i32; ALPHABETS];
                 buf.chunks_exact(I32_SIZE)
                     .enumerate()
@@ -242,27 +245,27 @@ impl Context {
         }
     }
 
-    pub fn decode(&self, pos: i32) -> RunLength {
+    pub async fn decode(&self, pos: i32) -> RunLength {
         let nearest_cp = self.find_checkpoint(pos);
         let mut pos_bwt = self.positions[nearest_cp];
         let pos_rlb = nearest_cp * CHUNK_SIZE;
 
-        let cp = self.read_cp(nearest_cp);
+        let cp = self.read_cp(nearest_cp).await;
         let mut occ = cp.occ;
-        let mut buf = [0u8; CHUNK_SIZE + 4];
+        let buf = [0u8; CHUNK_SIZE + 4];
 
         let buf = if ((pos - pos_bwt + 9) as usize) < buf.len() {
-            &mut buf[..(pos - pos_bwt + 9) as usize]
+            buf.slice(..(pos - pos_bwt + 9) as usize)
         } else {
-            &mut buf
+            buf.slice(..)
         };
-        let n = (&self.rlb).try_read_exact_at(buf, pos_rlb as u64).unwrap();
-        let mut iter = buf.iter_mut().take(n).skip_while(|x| x.is_rl_tail());
-        let Some(&mut b) = iter.next() else {
+        let (n, buf) = self.rlb.read_at(buf, pos_rlb as u64).await.unwrap();
+        let mut iter = buf.iter().take(n).skip_while(|x| x.is_rl_tail());
+        let Some(&b) = iter.next() else {
             unreachable!("Empty run-length")
         };
         let mut rl = RunLength::new(b, 0);
-        for &mut b in iter {
+        for &b in iter {
             if b.is_rl_tail() {
                 rl.extend_byte(b);
             } else {
