@@ -90,10 +90,7 @@ impl Cache {
                 rl.rank = rl.rank + pos - rl.pos;
                 rl
             });
-        if let Some(rl) = rl {
-            if rl.len == 1 {
-                self.inner.remove(&rl);
-            }
+        if let Some(_) = rl {
             self.hit += 1;
         } else {
             self.miss += 1;
@@ -195,15 +192,12 @@ impl Context {
     pub fn search(&mut self, pattern: &[u8]) {
         self.get_metadata();
         let range = self.search_pattern(pattern);
-        let matches = range.len();
-        let mut ids = Vec::with_capacity(matches);
-        for i in range {
-            let id = self.search_id_in_pos(i) + 1;
-            ids.push(id);
-        }
+        let mut ids = range
+            .map(|x| self.search_id_in_pos(x) + 1)
+            .collect::<Vec<_>>();
         ids.sort_unstable();
         ids.dedup();
-        let mut buf = Vec::with_capacity(MAX_RECORD_LEN);
+        let mut buf = [0u8; MAX_RECORD_LEN];
         let upper = self.min_id + self.recs;
         ids.into_iter().for_each(|id| {
             let start = if id == upper {
@@ -211,21 +205,21 @@ impl Context {
             } else {
                 self.search_pos_of_id(id)
             };
-            let id = id - 1;
-            buf.clear();
-            self.rebuild_record(start, &mut buf);
-            println!("[{}]{}", id, std::str::from_utf8(&buf).unwrap());
+            let str = self.rebuild_record(start, &mut buf);
+            println!("[{}]{}", id - 1, str);
         });
-        self.summary();
     }
 
-    fn rebuild_record(&mut self, mut pos: i32, buf: &mut Vec<u8>) {
+    fn rebuild_record<'a>(&mut self, mut pos: i32, buf: &'a mut [u8]) -> &'a str {
         let mut rl = self.cached_decode(pos);
+        let mut cur = 0;
         while rl.ch != b']' {
-            buf.push(rl.ch);
+            buf[cur] = rl.ch;
+            cur += 1;
             pos = self.nth_char_pos(rl.rank, rl.ch);
             rl = self.cached_decode(pos);
         }
-        buf.reverse();
+        buf[..cur].reverse();
+        std::str::from_utf8(&buf[..cur]).unwrap()
     }
 }
