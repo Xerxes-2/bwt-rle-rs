@@ -12,7 +12,10 @@ pub const CHUNK_SIZE: usize = OOC_TABLE_SIZE + I32_SIZE;
 pub const MAX_CACHE: usize = 250000;
 
 pub trait TryReadExact: Read {
-    fn try_read_exact(&mut self, mut buf: &mut [u8]) -> std::io::Result<usize> {
+    fn try_read_exact(mut self, mut buf: &mut [u8]) -> std::io::Result<usize>
+    where
+        Self: Sized,
+    {
         let mut read = 0;
         while !buf.is_empty() {
             match self.read(buf) {
@@ -28,7 +31,7 @@ pub trait TryReadExact: Read {
     }
 }
 
-impl TryReadExact for File {}
+impl TryReadExact for &File {}
 
 pub struct Context {
     rlb: File,                     // rlb file
@@ -42,8 +45,8 @@ pub struct Context {
 }
 
 impl Context {
-    pub fn new(mut rlb: File, mut index: Option<File>, cps: usize, positions: Vec<i32>) -> Self {
-        let c_table = gen_c_table(&mut rlb, index.as_mut(), cps);
+    pub fn new(mut rlb: File, index: Option<File>, cps: usize, positions: Vec<i32>) -> Self {
+        let c_table = gen_c_table(&mut rlb, index.as_ref(), cps);
         Self {
             rlb,
             index,

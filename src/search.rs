@@ -1,8 +1,8 @@
-use std::{collections::BTreeSet, ops::Range, thread::Thread};
+use std::{collections::BTreeSet, ops::Range};
 
 use crate::{
-    MAX_CACHE, Context,
-    index::{Mapper, RunLength, map_char},
+    Context, MAX_CACHE,
+    index::{Mapper, RunLength},
 };
 
 const MAX_RECORD_LEN: usize = 5000;
@@ -113,7 +113,7 @@ impl Cache {
 }
 
 impl Context {
-    fn search_pattern(&mut self, pattern: &[u8]) -> Range<i32> {
+    fn search_pattern(&self, pattern: &[u8]) -> Range<i32> {
         let mut index_start = self.c_table[pattern[0].map_char()];
         let mut index_end = self.c_table[pattern[0].map_char() + 1];
         let mut ooc_start;
@@ -127,7 +127,7 @@ impl Context {
         index_start..index_end
     }
     fn get_metadata(&mut self) {
-        let map_lb = map_char(b'[');
+        let map_lb = b'['.map_char();
         self.recs = self.c_table[map_lb + 1] - self.c_table[map_lb];
         let mut l = 0;
         let mut r = self.search_id_in_pos(0);
@@ -181,10 +181,10 @@ impl Context {
         rl
     }
 
-    fn search_pos_of_id(&mut self, id: i32) -> i32 {
+    fn search_pos_of_id(&self, id: i32) -> i32 {
         let mut pat = format!("[{}", id).into_bytes();
         pat.reverse();
-        let mut pos = self.c_table[map_char(b']')];
+        let mut pos = self.c_table[b']'.map_char()];
         pat.iter().for_each(|&ch| {
             let occ = self.occ_fn(ch, pos);
             pos = self.nth_char_pos(occ, ch);
