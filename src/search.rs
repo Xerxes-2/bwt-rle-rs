@@ -1,9 +1,5 @@
 use futures::prelude::*;
-use std::{
-    collections::BTreeSet,
-    ops::Range,
-    sync::{Arc, RwLock},
-};
+use std::{collections::BTreeSet, ops::Range, sync::RwLock};
 
 use crate::{
     Context, MAX_CACHE,
@@ -195,18 +191,17 @@ impl Context {
         ids.sort_unstable();
         ids.dedup();
         let upper = self.min_id + self.recs;
-        let ctx = Arc::new(self);
+        let ctx = &*self;
         stream::iter(ids)
-            .map(|x| (x, ctx.clone()))
-            .map(|(x, ctx)| async move {
-                let start = if x == upper {
+            .map(|id| async move {
+                let start = if id == upper {
                     ctx.search_pos_of_id(ctx.min_id).await
                 } else {
-                    ctx.search_pos_of_id(x).await
+                    ctx.search_pos_of_id(id).await
                 };
                 let mut buf = [0u8; MAX_RECORD_LEN];
                 let str = ctx.rebuild_record(start, &mut buf).await;
-                println!("[{}]{}", x - 1, str);
+                println!("[{}]{}", id - 1, str);
             })
             .buffered(num_concurrent)
             .collect::<Vec<_>>()
