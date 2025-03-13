@@ -1,3 +1,4 @@
+use compio::bytes::{BufMut, BytesMut};
 use futures::prelude::*;
 use std::{collections::BTreeSet, ops::Range, sync::RwLock};
 
@@ -179,7 +180,7 @@ impl Context {
         pos
     }
 
-    pub async fn search(&mut self, pattern: &[u8]) {
+    pub async fn search(mut self, pattern: &[u8]) {
         self.get_metadata().await;
         let num_concurrent = 128;
         let range = self.search_pattern(pattern).await;
@@ -191,7 +192,7 @@ impl Context {
         ids.sort_unstable();
         ids.dedup();
         let upper = self.min_id + self.recs;
-        let ctx = &*self;
+        let ctx = &self;
         stream::iter(ids)
             .map(|id| async move {
                 let start = if id == upper {
@@ -199,7 +200,7 @@ impl Context {
                 } else {
                     ctx.search_pos_of_id(id).await
                 };
-                let mut buf = [0u8; MAX_RECORD_LEN];
+                let mut buf = BytesMut::with_capacity(MAX_RECORD_LEN);
                 let str = ctx.rebuild_record(start, &mut buf).await;
                 println!("[{}]{}", id - 1, str);
             })
@@ -208,16 +209,14 @@ impl Context {
             .await;
     }
 
-    async fn rebuild_record<'a>(&self, mut pos: i32, buf: &'a mut [u8]) -> &'a str {
+    async fn rebuild_record<'a>(&self, mut pos: i32, buf: &'a mut BytesMut) -> &'a str {
         let mut rl = self.cached_decode(pos).await;
-        let mut cur = 0;
         while rl.ch != b']' {
-            buf[cur] = rl.ch;
-            cur += 1;
+            buf.put_u8(rl.ch);
             pos = self.nth_char_pos(rl.rank, rl.ch);
             rl = self.cached_decode(pos).await;
         }
-        buf[..cur].reverse();
-        std::str::from_utf8(&buf[..cur]).unwrap()
+        buf.reverse();
+        std::str::from_utf8(&buf[..]).unwrap()
     }
 }

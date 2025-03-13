@@ -54,7 +54,7 @@ async fn main() {
     }
     let mut pat = args[3].to_owned().into_bytes();
     pat.reverse();
-    let mut ctx = Context::new(rlb, index, checkpoints, positions).await;
+    let ctx = Context::new(rlb, index, checkpoints, positions).await;
     ctx.search(&pat).await;
     println!("Async Driver: {:?}", compio::driver::DriverType::current());
 }
