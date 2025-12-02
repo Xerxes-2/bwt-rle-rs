@@ -56,5 +56,5 @@ async fn main() {
     pat.reverse();
     let ctx = Context::new(rlb, index, checkpoints, positions).await;
     ctx.search(&pat).await;
-    println!("Async Driver: {:?}", compio::driver::DriverType::current());
+    // println!("Async Driver: {:?}", compio::driver::DriverType::current());
 }

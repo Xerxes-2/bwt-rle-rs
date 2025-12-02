@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-compio = { version = "0.15", "features" = ["macros", "bytes"] }
+compio = { version = "0.17", "features" = ["macros", "bytes"] }
 futures = "0.3"
 
 [profile.release]
