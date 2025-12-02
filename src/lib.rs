@@ -11,14 +11,22 @@ pub const CHUNK_SIZE: usize = OOC_TABLE_SIZE + I32_SIZE;
 pub const MAX_CACHE: usize = 250000;
 
 pub struct Context {
-    rlb: File,                     // rlb file
-    index: Option<File>,           // index file
-    cps: usize,                    // number of checkpoints
-    c_table: [i32; ALPHABETS + 1], // c table
-    positions: Vec<i32>,           // positions
-    min_id: i32,                   // minimum id
-    recs: i32,                     // number of records
-    cache: Cache,                  // cache
+    /// rlb file
+    rlb: File,
+    /// index file
+    index: Option<File>,
+    /// number of checkpoints
+    cps: usize,
+    /// c table
+    c_table: [i32; ALPHABETS + 1],
+    /// positions
+    positions: Vec<i32>,
+    /// minimum id
+    min_id: i32,
+    /// number of records
+    recs: i32,
+    /// cache
+    cache: Cache,
 }
 
 impl Context {
