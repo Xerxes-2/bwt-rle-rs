@@ -193,7 +193,7 @@ impl Context {
         ids.dedup();
         let upper = self.min_id + self.recs;
         let ctx = &self;
-        stream::iter(ids)
+        let res = stream::iter(ids)
             .map(|id| async move {
                 let start = if id == upper {
                     ctx.search_pos_of_id(ctx.min_id).await
@@ -202,11 +202,12 @@ impl Context {
                 };
                 let mut buf = BytesMut::with_capacity(MAX_RECORD_LEN);
                 let str = ctx.rebuild_record(start, &mut buf).await;
-                println!("[{}]{}", id - 1, str);
+                format!("[{}]{}\n", id - 1, str)
             })
             .buffered(num_concurrent)
-            .collect::<Vec<_>>()
+            .collect::<String>()
             .await;
+        print!("{}", res);
     }
 
     async fn rebuild_record<'a>(&self, mut pos: i32, buf: &'a mut BytesMut) -> &'a str {
