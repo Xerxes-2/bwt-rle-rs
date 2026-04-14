@@ -94,7 +94,7 @@ impl Cache {
     }
 
     fn insert(&self, rl: CacheRL) {
-        if self.inner.borrow().len() < MAX_CACHE {
+        if rl.len > 1 && self.inner.borrow().len() < MAX_CACHE {
             self.inner.borrow_mut().insert(rl);
         }
     }
