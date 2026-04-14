@@ -1,6 +1,7 @@
 use compio::bytes::{BufMut, BytesMut};
+use core::cell::RefCell;
 use futures::prelude::*;
-use std::{collections::BTreeSet, ops::Range, sync::RwLock};
+use std::{collections::BTreeSet, ops::Range};
 
 use crate::{
     Context, MAX_CACHE,
@@ -71,14 +72,13 @@ impl From<RunLength> for CacheRL {
 
 #[derive(Default)]
 pub struct Cache {
-    inner: RwLock<BTreeSet<CacheRL>>,
+    inner: RefCell<BTreeSet<CacheRL>>,
 }
 
 impl Cache {
     fn search(&self, pos: i32) -> Option<CacheRL> {
         self.inner
-            .read()
-            .unwrap()
+            .borrow()
             .range(
                 ..=CacheRL {
                     pos,
@@ -94,8 +94,8 @@ impl Cache {
     }
 
     fn insert(&self, rl: CacheRL) {
-        if self.inner.read().unwrap().len() < MAX_CACHE {
-            self.inner.write().unwrap().insert(rl);
+        if self.inner.borrow().len() < MAX_CACHE {
+            self.inner.borrow_mut().insert(rl);
         }
     }
 }
