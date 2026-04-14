@@ -4,16 +4,16 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-compio = { version = "0.18", features = ["macros", "bytes", "fs", "io"] }
+compio = { version = "0.18", features = ["bytes", "fs", "io", "macros"] }
 futures = "0.3"
-
-[profile.release]
-strip = true
-lto = true
-codegen-units = 1
-panic = "abort"
 
 [profile.bench]
 inherits = "release"
 debug = true
 strip = false
+
+[profile.release]
+strip = true
+lto = true
+panic = "abort"
+codegen-units = 1
