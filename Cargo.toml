@@ -17,3 +17,8 @@ strip = true
 lto = true
 panic = "abort"
 codegen-units = 1
+
+[profile.profiling]
+inherits = "release"
+strip = false
+debug = "line-tables-only"

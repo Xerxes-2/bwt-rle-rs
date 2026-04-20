@@ -1,4 +1,6 @@
+use compio::buf::bytes::BytesMut;
 use compio::fs::File;
+use core::cell::RefCell;
 use index::gen_c_table;
 use search::Cache;
 
@@ -9,6 +11,8 @@ pub const ALPHABETS: usize = 98;
 pub const OOC_TABLE_SIZE: usize = ALPHABETS * I32_SIZE;
 pub const CHUNK_SIZE: usize = OOC_TABLE_SIZE + I32_SIZE;
 pub const MAX_CACHE: usize = 250000;
+pub const BUF_POOL_CAP: usize = 128;
+pub const READ_BUF_SIZE: usize = CHUNK_SIZE + 4;
 
 pub struct Context {
     /// rlb file
@@ -27,6 +31,8 @@ pub struct Context {
     recs: i32,
     /// cache
     cache: Cache,
+    /// reusable IO buffers (single-threaded, compio is ST)
+    bufs: RefCell<Vec<BytesMut>>,
 }
 
 impl Context {
@@ -41,6 +47,25 @@ impl Context {
             recs: 0,
             min_id: 0,
             cache: Cache::default(),
+            bufs: RefCell::new(Vec::with_capacity(BUF_POOL_CAP)),
+        }
+    }
+
+    pub fn take_buf(&self) -> BytesMut {
+        self.bufs
+            .borrow_mut()
+            .pop()
+            .map(|mut b| {
+                b.clear();
+                b
+            })
+            .unwrap_or_else(|| BytesMut::with_capacity(READ_BUF_SIZE))
+    }
+
+    pub fn put_buf(&self, buf: BytesMut) {
+        let mut p = self.bufs.borrow_mut();
+        if p.len() < BUF_POOL_CAP {
+            p.push(buf);
         }
     }
 }

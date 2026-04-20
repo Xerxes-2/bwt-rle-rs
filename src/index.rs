@@ -1,7 +1,7 @@
 use std::iter::once;
 
 use compio::{
-    buf::bytes::BytesMut,
+    buf::{IntoInner, IoBuf, bytes::BytesMut},
     fs::File,
     io::{AsyncReadAt, AsyncReadAtExt, AsyncWriteAtExt},
 };
@@ -117,7 +117,7 @@ pub async fn gen_index(rlb: &File, mut index: &File, checkpoints: usize) -> Vec<
     let mut occ = [0i32; ALPHABETS];
     let mut pos_idx = (I32_SIZE * checkpoints) as u64;
     loop {
-        let buf = BytesMut::zeroed(CHUNK_SIZE + 4);
+        let buf = BytesMut::with_capacity(CHUNK_SIZE + 4);
         let (n, buf) = rlb
             .read_at(buf, (positions.len() - 1) as u64 * CHUNK_SIZE as u64)
             .await
@@ -171,7 +171,7 @@ pub async fn gen_c_table(
     let last_pos = checkpoints * CHUNK_SIZE;
     let mut c_table = [0; ALPHABETS + 1];
     if let Some(index) = index {
-        let buf = BytesMut::zeroed(OOC_TABLE_SIZE);
+        let buf = BytesMut::with_capacity(OOC_TABLE_SIZE);
         let pos = checkpoints * I32_SIZE + (checkpoints - 1) * OOC_TABLE_SIZE;
         let (_, buf) = index.read_exact_at(buf, pos as u64).await.unwrap();
         for (i, b) in buf.chunks_exact(I32_SIZE).enumerate() {
@@ -220,32 +220,32 @@ impl Context {
         if pos_bwt == pos {
             return occ[ch.map_char()];
         }
-        let buf = if ((pos - pos_bwt + 9) as usize) < CHUNK_SIZE + 4 {
-            BytesMut::zeroed((pos - pos_bwt + 9) as usize)
-        } else {
-            BytesMut::zeroed(CHUNK_SIZE + 4)
-        };
+        let buf = self.take_buf();
         let (n, buf) = self.rlb.read_at(buf, pos_rlb as u64).await.unwrap();
-        let mut iter = buf
-            .iter()
-            .take(n)
-            .skip_while(|x| x.is_rl_tail())
-            .chain(once(&0));
-        let b = iter.next().unwrap();
-        let mut rl = RunLength::new(*b, pos_bwt);
-        let mut occ = occ[ch.map_char()];
-        for &b in iter {
-            if !rl.extend_byte(b) {
-                match (unlikely(rl.char == ch), unlikely(rl.pos + rl.len > pos)) {
-                    (false, false) => {}
-                    (true, false) => occ += rl.len,
-                    (false, true) => return occ,
-                    (true, true) => return occ + pos - rl.pos,
+        let result = 'compute: {
+            let mut iter = buf
+                .iter()
+                .take(n)
+                .skip_while(|x| x.is_rl_tail())
+                .chain(once(&0));
+            let b = iter.next().unwrap();
+            let mut rl = RunLength::new(*b, pos_bwt);
+            let mut occ = occ[ch.map_char()];
+            for &b in iter {
+                if !rl.extend_byte(b) {
+                    match (unlikely(rl.char == ch), unlikely(rl.pos + rl.len > pos)) {
+                        (false, false) => {}
+                        (true, false) => occ += rl.len,
+                        (false, true) => break 'compute occ,
+                        (true, true) => break 'compute occ + pos - rl.pos,
+                    }
+                    rl = RunLength::new(b, rl.pos + rl.len);
                 }
-                rl = RunLength::new(b, rl.pos + rl.len);
             }
-        }
-        unreachable!("Position not found");
+            unreachable!("Position not found");
+        };
+        self.put_buf(buf);
+        result
     }
 
     async fn read_cp(&self, nearest_cp: usize) -> Checkpoint {
@@ -254,12 +254,14 @@ impl Context {
             (_, 0) => Checkpoint::default(),
             (Some(index), _) => {
                 let read_pos = self.cps * I32_SIZE + (nearest_cp - 1) * OOC_TABLE_SIZE;
-                let buf = BytesMut::zeroed(ALPHABETS * I32_SIZE);
-                let (_, buf) = index.read_exact_at(buf, read_pos as u64).await.unwrap();
+                let buf = self.take_buf().slice(..OOC_TABLE_SIZE);
+                let (_, slice) = index.read_exact_at(buf, read_pos as u64).await.unwrap();
+                let buf = slice.into_inner();
                 let mut cp = Checkpoint::default();
                 buf.chunks_exact(I32_SIZE)
                     .enumerate()
                     .for_each(|(i, b)| cp.occ[i] = i32::from_le_bytes(b.try_into().unwrap()));
+                self.put_buf(buf);
                 cp
             }
         }
@@ -272,30 +274,30 @@ impl Context {
 
         let cp = self.read_cp(nearest_cp).await;
         let mut occ = cp.occ;
-        let buf = if ((pos - pos_bwt + 9) as usize) < CHUNK_SIZE + 4 {
-            BytesMut::zeroed((pos - pos_bwt + 9) as usize)
-        } else {
-            BytesMut::zeroed(CHUNK_SIZE + 4)
-        };
+        let buf = self.take_buf();
         let (n, buf) = self.rlb.read_at(buf, pos_rlb as u64).await.unwrap();
-        let mut iter = buf
-            .iter()
-            .take(n)
-            .skip_while(|x| x.is_rl_tail())
-            .chain(once(&0));
-        let b = iter.next().unwrap();
-        let mut rl = RunLength::new(*b, pos_bwt);
-        for &b in iter {
-            if !rl.extend_byte(b) {
-                if unlikely(rl.pos + rl.len > pos) {
-                    rl.rank = rl.occ(&occ) + pos - rl.pos;
-                    return rl;
+        let result: RunLength = 'compute: {
+            let mut iter = buf
+                .iter()
+                .take(n)
+                .skip_while(|x| x.is_rl_tail())
+                .chain(once(&0));
+            let b = iter.next().unwrap();
+            let mut rl = RunLength::new(*b, pos_bwt);
+            for &b in iter {
+                if !rl.extend_byte(b) {
+                    if unlikely(rl.pos + rl.len > pos) {
+                        rl.rank = rl.occ(&occ) + pos - rl.pos;
+                        break 'compute rl;
+                    }
+                    rl.update_occ(&mut occ);
+                    rl = RunLength::new(b, rl.pos + rl.len);
                 }
-                rl.update_occ(&mut occ);
-                rl = RunLength::new(b, rl.pos + rl.len);
             }
-        }
-        unreachable!("Position not found");
+            unreachable!("Position not found");
+        };
+        self.put_buf(buf);
+        result
     }
 }
 
