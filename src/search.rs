@@ -49,7 +49,7 @@ impl Eq for CacheRL {}
 
 impl PartialOrd for CacheRL {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.pos.cmp(&other.pos))
+        Some(self.cmp(other))
     }
 }
 
