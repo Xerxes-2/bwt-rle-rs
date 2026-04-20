@@ -15,24 +15,20 @@ const MAP: [usize; 127] = [
     76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
 ];
 
-#[inline]
-#[cold]
-fn cold() {}
+use core::hint::cold_path;
 
-#[inline]
-#[allow(unused)]
-fn likely(b: bool) -> bool {
+#[inline(always)]
+pub const fn likely(b: bool) -> bool {
     if !b {
-        cold()
+        cold_path();
     }
     b
 }
 
-#[inline]
-#[allow(unused)]
-fn unlikely(b: bool) -> bool {
+#[inline(always)]
+pub const fn unlikely(b: bool) -> bool {
     if b {
-        cold()
+        cold_path();
     }
     b
 }
