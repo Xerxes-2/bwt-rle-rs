@@ -194,7 +194,7 @@ impl Context {
         let upper = self.min_id + self.recs;
         let ctx = &self;
         let res = stream::iter(ids)
-            .map(|id| async move {
+            .map(async |id| {
                 let start = if id == upper {
                     ctx.search_pos_of_id(ctx.min_id).await
                 } else {
